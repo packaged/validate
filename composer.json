@@ -1,0 +1,21 @@
+{
+  "name": "packaged/validate",
+  "description": "Input validation",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Richard Gooding",
+      "email": "rich@jdi.io"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "~4.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Packaged\\Validate\\": "src/",
+      "Packaged\\Validate\\Tests\\": "tests/"
+    }
+  }
+}
