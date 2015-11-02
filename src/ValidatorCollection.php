@@ -127,7 +127,6 @@ class ValidatorCollection extends AbstractValidator
   public function tidy($data, $nullMissing = false)
   {
     $data = $this->_dataAsArray($data);
-    $result = [];
     foreach($this->_validators as $field => $validator)
     {
       if(isset($data[$field]))
@@ -139,6 +138,6 @@ class ValidatorCollection extends AbstractValidator
         $data[$field] = null;
       }
     }
-    return $result;
+    return $data;
   }
 }
