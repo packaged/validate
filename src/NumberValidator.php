@@ -46,7 +46,7 @@ class NumberValidator extends AbstractValidator
       return $value;
     }
 
-    if(is_string($value))
+    if(is_numeric($value))
     {
       if(strpos($value, '.') !== false)
       {
