@@ -15,16 +15,31 @@ abstract class AbstractValidator implements IValidator
    */
   public function getLastError($asString = false)
   {
-    if($asString && is_array($this->_lastError))
+    if($asString && (!is_string($this->_lastError)))
     {
-      $lines = [];
-      foreach($this->_lastError as $name => $error)
-      {
-        $lines[] = $name . ': ' . $error;
-      }
-      return implode(', ', $lines);
+      return $this->_errorsToString($this->_lastError);
     }
     return $this->_lastError;
+  }
+
+  private function _errorsToString($errors, $indent = '')
+  {
+    $lines = [];
+    foreach($errors as $name => $message)
+    {
+      $line = $indent . $name . ': ';
+
+      if(is_array($message))
+      {
+        $line .= "\n" . $this->_errorsToString($message, $indent . '  ');
+      }
+      else
+      {
+        $line .= $message;
+      }
+      $lines[] = $line;
+    }
+    return implode("\n", $lines);
   }
 
   protected function _setLastError($error)
