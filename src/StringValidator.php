@@ -45,6 +45,6 @@ class StringValidator extends AbstractValidator
 
   public function tidy($value)
   {
-    return $value;
+    return (string)$value;
   }
 }
