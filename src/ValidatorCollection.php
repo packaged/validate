@@ -14,6 +14,7 @@ class ValidatorCollection extends AbstractValidator
 
   public function __construct($fieldValidators = [])
   {
+    $this->_validators = [];
     foreach($fieldValidators as $field => $validator)
     {
       $this->addField($field, $validator);
@@ -34,6 +35,10 @@ class ValidatorCollection extends AbstractValidator
 
   private function _dataAsArray($data)
   {
+    if(($data === null) || ($data === ""))
+    {
+      return [];
+    }
     $arrayData = json_decode(json_encode($data), true);
     return $arrayData ?: [];
   }
