@@ -2,7 +2,7 @@
   "name": "packaged/validate",
   "description": "Input validation",
   "minimum-stability": "dev",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Richard Gooding",
