@@ -45,6 +45,6 @@ class DecimalValidator extends NumberValidator
 
   public function tidy($value)
   {
-    return number_format(parent::tidy($value), $this->_decimalPlaces);
+    return round(parent::tidy($value), $this->_decimalPlaces);
   }
 }
