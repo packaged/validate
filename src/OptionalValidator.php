@@ -19,4 +19,9 @@ class OptionalValidator extends AbstractValidator
   {
     return $this->_validator->tidy($value);
   }
+
+  public function getLastError($asString = false)
+  {
+    return $this->_validator->getLastError();
+  }
 }

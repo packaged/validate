@@ -35,4 +35,9 @@ class NullableValidator extends AbstractValidator
     }
     return $value;
   }
+
+  public function getLastError($asString = false)
+  {
+    return $this->_validator->getLastError();
+  }
 }
