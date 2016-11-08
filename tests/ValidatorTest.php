@@ -3,8 +3,10 @@ namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\ArrayValidator;
 use Packaged\Validate\ConstEnumValidator;
+use Packaged\Validate\EmailValidator;
 use Packaged\Validate\EnumValidator;
 use Packaged\Validate\IntegerValidator;
+use Packaged\Validate\IPv4AddressValidator;
 use Packaged\Validate\NullableValidator;
 use Packaged\Validate\NumberValidator;
 use Packaged\Validate\OptionalValidator;
@@ -246,6 +248,66 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
           'optional1' => null,
         ]
       )
+    );
+  }
+
+
+  public function emailProvider()
+  {
+    return [
+      ['test@here', false],
+      ['test@test.com', true],
+      ['TeSt@TeSt.CoM', true],
+      ['123-test.user.one@test.domain.com', true],
+      ['-_@-.co', true],
+      ['.test@test.com', false],
+    ];
+  }
+
+  /**
+   * @dataProvider emailProvider
+   * @param string $emailAddress
+   * @param bool   $isValid
+   */
+  public function testEmailValidator($emailAddress, $isValid)
+  {
+    $validator = new EmailValidator();
+    $this->assertEquals(
+      $isValid,
+      $validator->validate($emailAddress),
+      'Incorrect result for ' . $emailAddress
+    );
+  }
+
+
+  public function ipv4Provider()
+  {
+    return [
+      ['0.0.0.0', true],
+      ['1.2.3.4', true],
+      ['255.255.255.255', true],
+      ['256.255.255.255', false],
+      ['255.256.255.255', false],
+      ['255.255.256.255', false],
+      ['255.255.255.256', false],
+      ['31.32.33.34', true],
+      ['a.b.c.d', false],
+    ];
+  }
+
+  /**
+   * @dataProvider ipv4Provider
+   *
+   * @param string $address
+   * @param bool   $isValid
+   */
+  public function testIpv4Validator($address, $isValid)
+  {
+    $validator = new IPv4AddressValidator();
+    $this->assertEquals(
+      $isValid,
+      $validator->validate($address),
+      'Incorrect result for ' . $address
     );
   }
 }
