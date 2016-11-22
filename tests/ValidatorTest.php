@@ -279,7 +279,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     );
   }
 
-
   public function ipv4Provider()
   {
     return [
@@ -309,6 +308,19 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
       $validator->validate($address),
       'Incorrect result for ' . $address
     );
+  }
+
+  public function testRegexValidatorMessage()
+  {
+    $v1 = new RegexValidator('/^[0-9]{6}$/');
+    $v2 = new RegexValidator('/^[0-9]{6}$/', 'test failure message');
+    $v1->validate('123');
+    $v2->validate('123');
+    $this->assertEquals(
+      'does not match regular expression',
+      $v1->getLastError()
+    );
+    $this->assertEquals('test failure message', $v2->getLastError());
   }
 }
 
