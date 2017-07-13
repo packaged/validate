@@ -108,7 +108,19 @@ class ValidatorCollection extends AbstractValidator
         if(isset($this->_validators[$field]))
         {
           $validator = $this->_validators[$field];
-          if(!$validator->validate($value))
+          if($validator instanceof ValidatorCollection)
+          {
+            $vRes = $validator->validate(
+              $value,
+              $requiredFields ? true : false,
+              $allowExtraFields
+            );
+          }
+          else
+          {
+            $vRes = $validator->validate($value);
+          }
+          if(!$vRes)
           {
             $result = false;
             $failedFields[$field] = $validator->getLastError();
