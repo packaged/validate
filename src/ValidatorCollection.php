@@ -1,10 +1,6 @@
 <?php
 namespace Packaged\Validate;
 
-use Packaged\Validate\AbstractValidator;
-use Packaged\Validate\IValidator;
-use Packaged\Validate\OptionalValidator;
-
 class ValidatorCollection extends AbstractValidator
 {
   /**
@@ -31,6 +27,20 @@ class ValidatorCollection extends AbstractValidator
     {
       $this->_validators[$name] = $validator;
     }
+  }
+
+  /**
+   * @param AbstractValidator[] $validators
+   *
+   * @return ValidatorCollection
+   */
+  public function addFields($validators)
+  {
+    foreach($validators as $k => $v)
+    {
+      $this->addField($k, $v);
+    }
+    return $this;
   }
 
   private function _dataAsArray($data)
@@ -137,7 +147,7 @@ class ValidatorCollection extends AbstractValidator
 
   /**
    * @param array|object $data
-   * @param bool $nullMissing If true then fill in missing fields with nulls
+   * @param bool         $nullMissing If true then fill in missing fields with nulls
    *
    * @return array
    */
