@@ -6,15 +6,11 @@ class ValidatorCollection extends AbstractValidator
   /**
    * @var IValidator[]
    */
-  private $_validators;
+  private $_validators = [];
 
   public function __construct($fieldValidators = [])
   {
-    $this->_validators = [];
-    foreach($fieldValidators as $field => $validator)
-    {
-      $this->addField($field, $validator);
-    }
+    $this->addFields($fieldValidators);
   }
 
   public function addField($name, $validator)
