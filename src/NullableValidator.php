@@ -19,8 +19,8 @@ class NullableValidator extends AbstractValidator
   public function validate($value)
   {
     return ($value === null)
-    || ($this->_allowEmptyString && ($value === ''))
-    || $this->_validator->validate($value);
+      || ($this->_allowEmptyString && ($value === ''))
+      || $this->_validator->validate($value);
   }
 
   public function tidy($value)
