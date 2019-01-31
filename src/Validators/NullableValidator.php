@@ -24,7 +24,10 @@ class NullableValidator extends AbstractValidator
   {
     if(!(($value === null) || ($this->_allowEmptyString && ($value === ''))))
     {
-      yield $this->_validator->validate($value);
+      foreach($this->_validator->validate($value) as $error)
+      {
+        yield $error;
+      }
     }
   }
 }
