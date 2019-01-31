@@ -7,10 +7,18 @@
     {
       "name": "Richard Gooding",
       "email": "rich@jdi.io"
+    },
+    {
+      "name": "Tom Kay",
+      "email": "oridan82@gmail.com"
     }
   ],
+  "require": {
+    "php": ">=7.1",
+    "ext-json": "*"
+  },
   "require-dev": {
-    "phpunit/phpunit": "~4.5"
+    "phpunit/phpunit": "~7.5"
   },
   "autoload": {
     "psr-4": {

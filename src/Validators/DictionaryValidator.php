@@ -1,5 +1,9 @@
 <?php
-namespace Packaged\Validate;
+namespace Packaged\Validate\Validators;
+
+use Generator;
+use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\IValidator;
 
 class DictionaryValidator extends AbstractValidator
 {
@@ -24,12 +28,11 @@ class DictionaryValidator extends AbstractValidator
     $this->_allowUnknownEntries = $allowUnknownEntries;
   }
 
-  public function validate($value)
+  protected function _doValidate($value): Generator
   {
     if(!is_array($value))
     {
-      $this->_setLastError('must be an array');
-      return false;
+      return $this->_makeError('must be an array');
     }
 
     $valueKeys = array_keys($value);
@@ -39,10 +42,7 @@ class DictionaryValidator extends AbstractValidator
       $missingEntries = array_diff($this->_requiredEntries, $valueKeys);
       if(count($missingEntries) > 0)
       {
-        $this->_setLastError(
-          'missing entries: ' . implode(', ', $missingEntries)
-        );
-        return false;
+        return $this->_makeError('missing entries: ' . implode(', ', $missingEntries));
       }
     }
 
@@ -51,42 +51,16 @@ class DictionaryValidator extends AbstractValidator
       $extraEntries = array_diff($valueKeys, $this->_requiredEntries);
       if(count($extraEntries) > 0)
       {
-        $this->_setLastError(
-          'unknown entries: ' . implode(', ', $extraEntries)
-        );
-        return false;
+        return $this->_makeError('unknown entries: ' . implode(', ', $extraEntries));
       }
     }
 
-    $result = true;
-    $errors = [];
     foreach($value as $key => $entry)
     {
-      if(!$this->_validator->validate($entry))
+      foreach($this->_validator->validate($entry) as $error)
       {
-        $errors[$key] = $this->_validator->getLastError();
-        $result = false;
+        yield $error;
       }
     }
-    if(!$result)
-    {
-      $this->_setLastError($errors);
-    }
-    return $result;
-  }
-
-  public function tidy($value)
-  {
-    if(!is_array($value))
-    {
-      throw new \Exception('Supplied value is not an array');
-    }
-
-    $result = [];
-    foreach($value as $k => $v)
-    {
-      $result[$k] = $this->_validator->tidy($v);
-    }
-    return $result;
   }
 }

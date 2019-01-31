@@ -1,49 +1,74 @@
 <?php
 namespace Packaged\Validate;
 
+use Generator;
+
 abstract class AbstractValidator implements IValidator
 {
-  /**
-   * @var bool|string|string[]
-   */
-  private $_lastError = false;
+  protected function _makeError(string $message): ValidationException
+  {
+    return new ValidationException($message);
+  }
 
   /**
-   * @param bool $asString If true then implode an array of errors into a string
+   * @param $value
    *
-   * @return string|string[]
+   * @return Generator|ValidationException[]
    */
-  public function getLastError($asString = false)
+  abstract protected function _doValidate($value): Generator;
+
+  public function validate($value): array
   {
-    if($asString && (!is_string($this->_lastError)))
+    $errors = [];
+    $gen = $this->_doValidate($value);
+    foreach($gen as $error)
     {
-      return $this->_errorsToString($this->_lastError);
+      if($error)
+      {
+        $errors[] = $error;
+      }
     }
-    return $this->_lastError;
+    $error = $gen->getReturn();
+    if($error)
+    {
+      $errors[] = $error;
+    }
+    return $errors;
   }
 
-  private function _errorsToString($errors, $indent = '')
+  public function assert($value)
   {
-    $lines = [];
-    foreach($errors as $name => $message)
+    $gen = $this->_doValidate($value);
+    foreach($gen as $error)
     {
-      $line = $indent . $name . ': ';
-
-      if(is_array($message))
+      if($error)
       {
-        $line .= "\n" . $this->_errorsToString($message, $indent . '  ');
+        throw $error;
       }
-      else
-      {
-        $line .= $message;
-      }
-      $lines[] = $line;
     }
-    return implode("\n", $lines);
+    $error = $gen->getReturn();
+    if($error)
+    {
+      throw $error;
+    }
   }
 
-  protected function _setLastError($error)
+  public function isValid($value): bool
   {
-    $this->_lastError = $error;
+    $gen = $this->_doValidate($value);
+    /** @noinspection PhpUnusedLocalVariableInspection */
+    foreach($gen as $error)
+    {
+      if($error)
+      {
+        return false;
+      }
+    }
+    $error = $gen->getReturn();
+    if($error)
+    {
+      return false;
+    }
+    return true;
   }
 }

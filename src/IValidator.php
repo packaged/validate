@@ -8,21 +8,21 @@ interface IValidator
    *
    * @param mixed $value
    *
-   * @return bool
+   * @return ValidationException[]
    */
-  public function validate($value);
+  public function validate($value): array;
 
   /**
-   * Tidy up a value so it conforms to this field's type (if possible)
-   *
    * @param mixed $value
    *
-   * @return mixed
+   * @return bool
    */
-  public function tidy($value);
+  public function isValid($value): bool;
 
   /**
-   * @return string
+   * @param mixed $value
+   *
+   * @throws ValidationException
    */
-  public function getLastError();
+  public function assert($value);
 }

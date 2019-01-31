@@ -1,5 +1,8 @@
 <?php
-namespace Packaged\Validate;
+namespace Packaged\Validate\Validators;
+
+use Generator;
+use Packaged\Validate\AbstractValidator;
 
 class StringValidator extends AbstractValidator
 {
@@ -22,29 +25,16 @@ class StringValidator extends AbstractValidator
     $this->_maxLength = $maxLength;
   }
 
-  public function validate($value)
+  protected function _doValidate($value): Generator
   {
     $len = strlen($value);
-    $result = true;
     if($len < $this->_minLength)
     {
-      $this->_setLastError(
-        'must be at least ' . $this->_minLength . ' characters'
-      );
-      $result = false;
+      yield $this->_makeError('must be at least ' . $this->_minLength . ' characters');
     }
     else if(($this->_maxLength > 0) && ($len > $this->_maxLength))
     {
-      $this->_setLastError(
-        'must be no more than ' . $this->_maxLength . ' characters'
-      );
-      $result = false;
+      yield $this->_makeError('must be no more than ' . $this->_maxLength . ' characters');
     }
-    return $result;
-  }
-
-  public function tidy($value)
-  {
-    return (string)$value;
   }
 }

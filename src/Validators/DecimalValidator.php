@@ -1,5 +1,7 @@
 <?php
-namespace Packaged\Validate;
+namespace Packaged\Validate\Validators;
+
+use Generator;
 
 class DecimalValidator extends NumberValidator
 {
@@ -20,31 +22,24 @@ class DecimalValidator extends NumberValidator
     $this->_decimalPlaces = $decimalPlaces;
   }
 
-  public function validate($value)
+  protected function _doValidate($value): Generator
   {
-    if(parent::validate($value))
+    $passParent = true;
+    foreach(parent::_doValidate($value) as $err)
+    {
+      yield $err;
+      $passParent = false;
+    }
+
+    if($passParent)
     {
       $parts = explode('.', $value);
       if((count($parts) > 2)
-        || ((count($parts) == 2)
-          && (strlen($parts[1]) > $this->_decimalPlaces))
+        || ((count($parts) == 2) && (strlen($parts[1]) > $this->_decimalPlaces))
       )
       {
-        $this->_setLastError(
-          'must be a number to no more than '
-          . $this->_decimalPlaces . ' decimal places'
-        );
-      }
-      else
-      {
-        return true;
+        yield $this->_makeError('must be a number to no more than ' . $this->_decimalPlaces . ' decimal places');
       }
     }
-    return false;
-  }
-
-  public function tidy($value)
-  {
-    return round(parent::tidy($value), $this->_decimalPlaces);
   }
 }

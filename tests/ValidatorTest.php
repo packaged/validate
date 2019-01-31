@@ -1,39 +1,51 @@
 <?php
-namespace Packaged\Validate\Tests;
+namespace Packaged\Validate\Validators\Tests;
 
-use Packaged\Validate\ArrayValidator;
-use Packaged\Validate\ConstEnumValidator;
-use Packaged\Validate\EmailValidator;
-use Packaged\Validate\EnumValidator;
-use Packaged\Validate\IntegerValidator;
-use Packaged\Validate\IPv4AddressValidator;
-use Packaged\Validate\NullableValidator;
-use Packaged\Validate\NumberValidator;
-use Packaged\Validate\OptionalValidator;
-use Packaged\Validate\RegexValidator;
-use Packaged\Validate\StringValidator;
-use Packaged\Validate\ValidatorCollection;
+use Packaged\Validate\IValidator;
+use Packaged\Validate\ValidationException;
+use Packaged\Validate\Validators\ArrayValidator;
+use Packaged\Validate\Validators\ConstEnumValidator;
+use Packaged\Validate\Validators\EmailValidator;
+use Packaged\Validate\Validators\EnumValidator;
+use Packaged\Validate\Validators\IntegerValidator;
+use Packaged\Validate\Validators\IPv4AddressValidator;
+use Packaged\Validate\Validators\MultiValidator;
+use Packaged\Validate\Validators\NullableValidator;
+use Packaged\Validate\Validators\NumberValidator;
+use Packaged\Validate\Validators\OptionalValidator;
+use Packaged\Validate\Validators\RegexValidator;
+use Packaged\Validate\Validators\StringValidator;
+use Packaged\Validate\Validators\ValidatorCollection;
+use PHPUnit\Framework\TestCase;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
-  public function testStringValidator()
+  public function dataProvider()
   {
-    $this->_doTestStringValidator(0, 0);
-    $this->_doTestStringValidator(0, 1);
-    $this->_doTestStringValidator(0, 2);
-    $this->_doTestStringValidator(0, 9);
-    $this->_doTestStringValidator(0, 10);
-    $this->_doTestStringValidator(0, 99);
-    $this->_doTestStringValidator(0, 100);
-    $this->_doTestStringValidator(1, 0);
-    $this->_doTestStringValidator(10, 0);
-    $this->_doTestStringValidator(11, 0);
-    $this->_doTestStringValidator(100, 0);
-    $this->_doTestStringValidator(101, 0);
-    $this->_doTestStringValidator(5, 15);
+    return [
+      [0, 0],
+      [0, 1],
+      [0, 2],
+      [0, 9],
+      [0, 10],
+      [0, 99],
+      [0, 100],
+      [1, 0],
+      [10, 0],
+      [11, 0],
+      [100, 0],
+      [101, 0],
+      [5, 15],
+    ];
   }
 
-  private function _doTestStringValidator($minLen, $maxLen)
+  /**
+   * @param $minLen
+   * @param $maxLen
+   *
+   * @dataProvider dataProvider
+   */
+  public function testStringValidator($minLen, $maxLen)
   {
     $validator = new StringValidator($minLen, $maxLen);
 
@@ -41,14 +53,24 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
       '',
       'a',
       str_repeat('a', 10),
-      str_repeat('a', 100)
+      str_repeat('a', 100),
     ];
 
     foreach($strings as $string)
     {
-      $expected = (strlen($string) >= $minLen)
-        && (($maxLen <= 0) || (strlen($string) <= $maxLen));
-      $this->assertEquals($expected, $validator->validate($string));
+      $errors = $validator->validate($string);
+
+      $expected = (strlen($string) >= $minLen) && (($maxLen <= 0) || (strlen($string) <= $maxLen));
+      if($expected)
+      {
+        $this->assertEmpty($errors);
+      }
+      else
+      {
+        $this->assertNotEmpty($errors);
+        $this->assertEquals(1, count($errors));
+        $this->assertContainsOnly(ValidationException::class, $errors);
+      }
     }
   }
 
@@ -79,8 +101,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     );
 
     $data = json_decode(
-      '
-{
+      '{
     "string1":"a string",
     "int1":12,
     "float1":"123",
@@ -103,18 +124,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 }'
     );
 
-    $this->assertTrue($collection->validate($data));
+    $this->assertEmpty($collection->validate($data));
+  }
+
+  private function _makeCollection($values, IValidator $validator)
+  {
+    return new ValidatorCollection(array_fill(0, count($values), $validator));
   }
 
   public function testEnumValidatorCaseInsensitive()
   {
     $allowed = ['string1', 'String2', 'STRING3'];
     $validator = new EnumValidator($allowed, false);
-    foreach($allowed as $value)
-    {
-      $this->assertTrue($validator->validate(strtolower($value)));
-    }
-    $this->assertFalse($validator->validate('Unknown string'));
+    $collection = $this->_makeCollection($allowed, $validator);
+    $this->assertEmpty($collection->validate(array_map('strtolower', $allowed)));
+    $this->assertNotEmpty($validator->validate('Unknown string'));
   }
 
   public function testEnumValidatorCaseSensitive()
@@ -122,42 +146,24 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     $allowed = ['string1', 'String2', 'STRING3'];
     $validator = new EnumValidator($allowed, true);
 
-    $this->assertTrue($validator->validate('string1'));
-    $this->assertFalse($validator->validate('string2'));
-    $this->assertFalse($validator->validate('string3'));
-    foreach($allowed as $value)
-    {
-      $this->assertTrue($validator->validate($value));
-    }
-    $this->assertFalse($validator->validate('Unknown string'));
-  }
+    $this->assertEmpty($validator->validate('string1'));
+    $this->assertNotEmpty($validator->validate('string2'));
+    $this->assertNotEmpty($validator->validate('string3'));
+    $this->assertNotEmpty($validator->validate('Unknown string'));
 
-  public function testEnumTidy()
-  {
-    $allowed = ['string1', 'String2', 'STRING3'];
-    $csValidator = new EnumValidator($allowed, true);
-    $ciValidator = new EnumValidator($allowed, false);
-
-    $this->assertEquals('string1', $csValidator->tidy('string1'));
-    $this->assertEquals(null, $csValidator->tidy('string2'));
-    $this->assertEquals(null, $csValidator->tidy('string3'));
-
-    $this->assertEquals('string1', $ciValidator->tidy('string1'));
-    $this->assertEquals('String2', $ciValidator->tidy('string2'));
-    $this->assertEquals('STRING3', $ciValidator->tidy('string3'));
-
-    $this->assertEquals(null, $csValidator->tidy('Unknown string'));
-    $this->assertEquals(null, $ciValidator->tidy('Unknown string'));
+    $collection = $this->_makeCollection($allowed, $validator);
+    $this->assertEmpty($collection->validate($allowed));
   }
 
   public function testConstEnum()
   {
+    /** @noinspection PhpUnhandledExceptionInspection */
     $validator = new ConstEnumValidator(ConstTestClass::class);
-    $this->assertTrue($validator->validate(ConstTestClass::TEST_CONST_1));
-    $this->assertTrue($validator->validate(ConstTestClass::TEST_CONST_2));
-    $this->assertTrue($validator->validate(ConstTestClass::TEST_CONST_3));
-    $this->assertTrue($validator->validate(ConstTestClass::TEST_CONST_4));
-    $this->assertFalse($validator->validate('unknown value'));
+    $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_1));
+    $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_2));
+    $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_3));
+    $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_4));
+    $this->assertNotEmpty($validator->validate('unknown value'));
   }
 
   public function testNullable()
@@ -169,7 +175,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
       ]
     );
 
-    $this->assertTrue(
+    $this->assertEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
@@ -177,7 +183,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         ]
       )
     );
-    $this->assertFalse(
+    $this->assertNotEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
@@ -185,14 +191,14 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         ]
       )
     );
-    $this->assertFalse(
+    $this->assertNotEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
         ]
       )
     );
-    $this->assertTrue(
+    $this->assertEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
@@ -211,7 +217,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
       ]
     );
 
-    $this->assertTrue(
+    $this->assertEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
@@ -219,7 +225,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         ]
       )
     );
-    $this->assertFalse(
+    $this->assertNotEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
@@ -227,21 +233,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         ]
       )
     );
-    $this->assertTrue(
+    $this->assertEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
         ]
       )
     );
-    $this->assertFalse(
+    $this->assertNotEmpty(
       $validator->validate(
         [
           'optional1' => 'other data',
         ]
       )
     );
-    $this->assertFalse(
+    $this->assertNotEmpty(
       $validator->validate(
         [
           'required1' => 'some data',
@@ -250,7 +256,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
       )
     );
   }
-
 
   public function emailProvider()
   {
@@ -266,17 +271,22 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
   /**
    * @dataProvider emailProvider
+   *
    * @param string $emailAddress
    * @param bool   $isValid
    */
   public function testEmailValidator($emailAddress, $isValid)
   {
     $validator = new EmailValidator();
-    $this->assertEquals(
-      $isValid,
-      $validator->validate($emailAddress),
-      'Incorrect result for ' . $emailAddress
-    );
+    $errors = $validator->validate($emailAddress);
+    if($isValid)
+    {
+      $this->assertEmpty($errors);
+    }
+    else
+    {
+      $this->assertNotEmpty($errors);
+    }
   }
 
   public function ipv4Provider()
@@ -303,24 +313,43 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
   public function testIpv4Validator($address, $isValid)
   {
     $validator = new IPv4AddressValidator();
-    $this->assertEquals(
-      $isValid,
-      $validator->validate($address),
-      'Incorrect result for ' . $address
-    );
+    $errors = $validator->validate($address);
+    if($isValid)
+    {
+      $this->assertEmpty($errors);
+    }
+    else
+    {
+      $this->assertNotEmpty($errors);
+    }
   }
 
   public function testRegexValidatorMessage()
   {
     $v1 = new RegexValidator('/^[0-9]{6}$/');
     $v2 = new RegexValidator('/^[0-9]{6}$/', 'test failure message');
-    $v1->validate('123');
-    $v2->validate('123');
-    $this->assertEquals(
-      'does not match regular expression',
-      $v1->getLastError()
-    );
-    $this->assertEquals('test failure message', $v2->getLastError());
+    $v1err = $v1->validate('123');
+    $this->assertNotEmpty($v1err);
+    $this->assertEquals('does not match regular expression', $v1err[0]->getMessage());
+    $v2err = $v2->validate('123');
+    $this->assertNotEmpty($v2err);
+    $this->assertEquals('test failure message', $v2err[0]->getMessage());
+  }
+
+  public function testMultiValidator()
+  {
+    $validator = new MultiValidator(new StringValidator(10), new EmailValidator());
+    $test1 = $validator->validate('t@jdiio');
+    $this->assertNotEmpty($test1);
+    $this->assertEquals('must be at least 10 characters', $test1[0]->getMessage());
+    $this->assertEquals('invalid email address', $test1[1]->getMessage());
+
+    $test2 = $validator->validate('t@jdi.io');
+    $this->assertNotEmpty($test2);
+    $this->assertEquals('must be at least 10 characters', $test2[0]->getMessage());
+
+    $test3 = $validator->validate('tom.kay@jdi.io');
+    $this->assertEmpty($test3);
   }
 }
 

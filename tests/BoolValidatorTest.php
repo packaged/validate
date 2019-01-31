@@ -1,9 +1,11 @@
 <?php
-namespace Packaged\Validate\Tests;
+namespace Packaged\Validate\Validators\Tests;
 
-use Packaged\Validate\BoolValidator;
+use Packaged\Validate\ValidationException;
+use Packaged\Validate\Validators\BoolValidator;
+use PHPUnit\Framework\TestCase;
 
-class BoolValidatorTest extends \PHPUnit_Framework_TestCase
+class BoolValidatorTest extends TestCase
 {
   public function testValidation()
   {
@@ -20,7 +22,7 @@ class BoolValidatorTest extends \PHPUnit_Framework_TestCase
       'FALSE',
       '0',
       0,
-      false
+      false,
     ];
 
     $notOkValues = [
@@ -33,53 +35,20 @@ class BoolValidatorTest extends \PHPUnit_Framework_TestCase
       new \stdClass(),
       1.1,
       '1.1',
-      ''
+      '',
     ];
 
     foreach($okValues as $value)
     {
-      $this->assertTrue($validator->validate($value));
+      $this->assertTrue($validator->isValid($value));
     }
     foreach($notOkValues as $value)
     {
-      $this->assertFalse($validator->validate($value));
+      $errors = $validator->validate($value);
+      $this->assertNotEmpty($errors);
+      $this->assertEquals(1, count($errors));
+      $this->assertContainsOnly(ValidationException::class, $errors);
+      $this->assertEquals('Invalid boolean value', $errors[0]->getMessage());
     }
-  }
-
-  public function testTidy()
-  {
-    $validator = new BoolValidator();
-    $trueValues = [
-      'true',
-      'True',
-      'TRUE',
-      '1',
-      1,
-      true,
-      ];
-    $falseValues =[
-      'false',
-      'False',
-      'FALSE',
-      '0',
-      0,
-      false
-    ];
-
-    foreach($trueValues as $value)
-    {
-      $this->assertTrue($validator->tidy($value));
-    }
-    foreach($falseValues as $value)
-    {
-      $this->assertFalse($validator->tidy($value));
-    }
-  }
-
-  public function testFailedTidy()
-  {
-    $validator = new BoolValidator();
-    $this->setExpectedException(\Exception::class, 'Unable to tidy the value');
-    $validator->tidy('abc');
   }
 }

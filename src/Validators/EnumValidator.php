@@ -1,5 +1,8 @@
 <?php
-namespace Packaged\Validate;
+namespace Packaged\Validate\Validators;
+
+use Generator;
+use Packaged\Validate\AbstractValidator;
 
 class EnumValidator extends AbstractValidator
 {
@@ -16,11 +19,14 @@ class EnumValidator extends AbstractValidator
     $this->_caseSensitive = $caseSensitive;
   }
 
-  public function validate($value)
+  protected function _doValidate($value): Generator
   {
     if($this->_caseSensitive)
     {
-      return in_array($value, $this->_allowedValues);
+      if(!in_array($value, $this->_allowedValues))
+      {
+        return $this->_makeError('not a valid value');
+      }
     }
 
     $result = false;
@@ -29,26 +35,11 @@ class EnumValidator extends AbstractValidator
       if(strcasecmp($allowedValue, $value) == 0)
       {
         $result = true;
-        break;
       }
     }
-    return $result;
-  }
-
-  public function tidy($value)
-  {
-    if($this->_caseSensitive)
+    if(!$result)
     {
-      return in_array($value, $this->_allowedValues) ? $value : null;
+      yield $this->_makeError('not a valid value');
     }
-
-    foreach($this->_allowedValues as $allowedValue)
-    {
-      if(strcasecmp($allowedValue, $value) == 0)
-      {
-        return $allowedValue;
-      }
-    }
-    return null;
   }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Packaged\Validate;
+namespace Packaged\Validate\Validators;
 
 /**
  * Same as EnumValidator but takes its values from the constants in the
@@ -10,6 +10,8 @@ class ConstEnumValidator extends EnumValidator
   /**
    * @param string $className
    * @param bool   $caseSensitive
+   *
+   * @throws \ReflectionException
    */
   public function __construct($className, $caseSensitive = false)
   {
