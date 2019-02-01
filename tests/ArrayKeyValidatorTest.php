@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayKeyValidatorTest extends TestCase
 {
-  public function intArrayProvider()
+  public function arrayProvider()
   {
     return [
       ['invalid', false, false],
@@ -19,13 +19,13 @@ class ArrayKeyValidatorTest extends TestCase
   }
 
   /**
-   * @dataProvider intArrayProvider
+   * @dataProvider arrayProvider
    *
    * @param $test
    * @param $allowUnknown
    * @param $expectedValid
    */
-  public function testIntArray($test, $allowUnknown, $expectedValid)
+  public function testArray($test, $allowUnknown, $expectedValid)
   {
     $validator = new ArrayKeyValidator(['test1', 'test2', 'test3'], $allowUnknown);
     $this->assertEquals($expectedValid, $validator->isValid($test));
