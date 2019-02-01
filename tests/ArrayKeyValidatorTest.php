@@ -1,7 +1,7 @@
 <?php
 namespace Packaged\Validate\Validators\Tests;
 
-use Packaged\Validate\Validators\ArrayKeyValidator;
+use Packaged\Validate\Validators\ArrayKeysValidator;
 use PHPUnit\Framework\TestCase;
 
 class ArrayKeyValidatorTest extends TestCase
@@ -27,7 +27,7 @@ class ArrayKeyValidatorTest extends TestCase
    */
   public function testArray($test, $allowUnknown, $expectedValid)
   {
-    $validator = new ArrayKeyValidator(['test1', 'test2', 'test3'], $allowUnknown);
+    $validator = new ArrayKeysValidator(['test1', 'test2', 'test3'], $allowUnknown);
     $this->assertEquals($expectedValid, $validator->isValid($test));
   }
 }

@@ -3,7 +3,7 @@ namespace Packaged\Validate\Validators;
 
 use Generator;
 
-class PropertyValidator extends ArrayKeyValidator
+class PropertiesValidator extends ArrayKeysValidator
 {
   protected function _doValidate($value): Generator
   {

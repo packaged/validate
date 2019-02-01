@@ -4,7 +4,7 @@ namespace Packaged\Validate\Validators;
 use Generator;
 use Packaged\Validate\AbstractValidator;
 
-class ArrayKeyValidator extends AbstractValidator
+class ArrayKeysValidator extends AbstractValidator
 {
   private $_requiredEntries;
   private $_allowUnknownEntries;
@@ -14,7 +14,7 @@ class ArrayKeyValidator extends AbstractValidator
    * @param bool     $allowUnknownEntries   If true then don't fail if extra
    *                                        entries are passed in
    */
-  public function __construct(array $requiredEntries = [], bool $allowUnknownEntries = false)
+  public function __construct(array $requiredEntries, bool $allowUnknownEntries = false)
   {
     $this->_requiredEntries = $requiredEntries;
     $this->_allowUnknownEntries = $allowUnknownEntries;

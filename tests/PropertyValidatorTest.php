@@ -2,7 +2,7 @@
 namespace Packaged\Validate\Validators\Tests;
 
 use Packaged\Validate\Tests\ObjectTest;
-use Packaged\Validate\Validators\PropertyValidator;
+use Packaged\Validate\Validators\PropertiesValidator;
 use PHPUnit\Framework\TestCase;
 
 class PropertyValidatorTest extends TestCase
@@ -26,13 +26,13 @@ class PropertyValidatorTest extends TestCase
    */
   public function testObjectProperties($requiredFields, $allowUnknown, $expectedValid)
   {
-    $validator = new PropertyValidator($requiredFields, $allowUnknown);
+    $validator = new PropertiesValidator($requiredFields, $allowUnknown);
     $this->assertEquals($expectedValid, $validator->isValid(new ObjectTest()));
   }
 
   public function testNotAnObject()
   {
-    $validator = new PropertyValidator();
+    $validator = new PropertiesValidator([]);
     $this->assertEquals(false, $validator->isValid('string'));
   }
 }
