@@ -3,27 +3,19 @@ namespace Packaged\Validate\Validators;
 
 use Generator;
 use Packaged\Validate\AbstractValidator;
-use Packaged\Validate\IValidator;
 
-class DictionaryValidator extends AbstractValidator
+class ArrayKeyValidator extends AbstractValidator
 {
-  private $_validator;
   private $_requiredEntries;
   private $_allowUnknownEntries;
 
   /**
-   * DictionaryValidator constructor.
-   *
-   * @param IValidator $validator           The validator to use for the fields
-   * @param string[]   $requiredEntries     A list of entries that are required
-   * @param bool       $allowUnknownEntries If true then don't fail if extra
+   * @param string[] $requiredEntries       A list of entries that are required
+   * @param bool     $allowUnknownEntries   If true then don't fail if extra
    *                                        entries are passed in
    */
-  public function __construct(
-    IValidator $validator, $requiredEntries = [], $allowUnknownEntries = false
-  )
+  public function __construct(array $requiredEntries = [], bool $allowUnknownEntries = false)
   {
-    $this->_validator = $validator;
     $this->_requiredEntries = $requiredEntries;
     $this->_allowUnknownEntries = $allowUnknownEntries;
   }
@@ -42,7 +34,7 @@ class DictionaryValidator extends AbstractValidator
       $missingEntries = array_diff($this->_requiredEntries, $valueKeys);
       if(count($missingEntries) > 0)
       {
-        return $this->_makeError('missing entries: ' . implode(', ', $missingEntries));
+        yield $this->_makeError('missing entries: ' . implode(', ', $missingEntries));
       }
     }
 
@@ -51,15 +43,7 @@ class DictionaryValidator extends AbstractValidator
       $extraEntries = array_diff($valueKeys, $this->_requiredEntries);
       if(count($extraEntries) > 0)
       {
-        return $this->_makeError('unknown entries: ' . implode(', ', $extraEntries));
-      }
-    }
-
-    foreach($value as $key => $entry)
-    {
-      foreach($this->_validator->validate($entry) as $error)
-      {
-        yield $error;
+        yield $this->_makeError('unknown entries: ' . implode(', ', $extraEntries));
       }
     }
   }
