@@ -21,16 +21,16 @@ class EnumValidator extends AbstractValidator
 
   protected function _doValidate($value): Generator
   {
-    if($this->_caseSensitive)
+    if($this->_getCaseSensitive())
     {
-      if(!in_array($value, $this->_allowedValues))
+      if(!in_array($value, $this->_getAllowedValues()))
       {
         return $this->_makeError('not a valid value');
       }
     }
 
     $result = false;
-    foreach($this->_allowedValues as $allowedValue)
+    foreach($this->_getAllowedValues() as $allowedValue)
     {
       if(strcasecmp($allowedValue, $value) == 0)
       {
@@ -41,5 +41,15 @@ class EnumValidator extends AbstractValidator
     {
       yield $this->_makeError('not a valid value');
     }
+  }
+
+  protected function _getAllowedValues()
+  {
+    return $this->_allowedValues;
+  }
+
+  protected function _getCaseSensitive()
+  {
+    return $this->_caseSensitive;
   }
 }
