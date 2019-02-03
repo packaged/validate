@@ -7,9 +7,9 @@ use Packaged\Validate\IValidator;
 
 class ArrayValidator extends AbstractValidator
 {
-  private $_validator;
-  private $_minCount;
-  private $_maxCount;
+  protected $_validator;
+  protected $_minCount;
+  protected $_maxCount;
 
   public function __construct(IValidator $validator, $minCount = 0, $maxCount = 0)
   {

@@ -11,11 +11,11 @@ class SchemaValidator extends AbstractValidator
   /**
    * @var IValidator[]
    */
-  private $_validators = [];
+  protected $_validators = [];
   /**
    * @var ArrayKeysValidator|null
    */
-  private $_keyValidator;
+  protected $_keyValidator;
 
   /**
    * ValidatorCollection constructor.

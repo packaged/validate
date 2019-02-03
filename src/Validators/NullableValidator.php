@@ -7,8 +7,8 @@ use Packaged\Validate\IValidator;
 
 class NullableValidator extends AbstractValidator
 {
-  private $_validator;
-  private $_allowEmptyString = false;
+  protected $_validator;
+  protected $_allowEmptyString = false;
 
   /**
    * @param IValidator $validator

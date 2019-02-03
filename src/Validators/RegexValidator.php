@@ -6,8 +6,8 @@ use Packaged\Validate\AbstractValidator;
 
 class RegexValidator extends AbstractValidator
 {
-  private $_pattern;
-  private $_message;
+  protected $_pattern;
+  protected $_message;
 
   /**
    * @param string $pattern

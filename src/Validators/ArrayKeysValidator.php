@@ -6,8 +6,8 @@ use Packaged\Validate\AbstractValidator;
 
 class ArrayKeysValidator extends AbstractValidator
 {
-  private $_requiredEntries;
-  private $_allowUnknownEntries;
+  protected $_requiredEntries;
+  protected $_allowUnknownEntries;
 
   /**
    * @param string[] $requiredEntries       A list of entries that are required

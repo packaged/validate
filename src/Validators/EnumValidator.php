@@ -6,8 +6,8 @@ use Packaged\Validate\AbstractValidator;
 
 class EnumValidator extends AbstractValidator
 {
-  private $_allowedValues;
-  private $_caseSensitive;
+  protected $_allowedValues;
+  protected $_caseSensitive;
 
   /**
    * @param string[] $allowedValues

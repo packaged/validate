@@ -7,7 +7,7 @@ use Packaged\Validate\IValidator;
 
 class OptionalValidator extends AbstractValidator
 {
-  private $_validator;
+  protected $_validator;
 
   public function __construct(IValidator $validator)
   {
