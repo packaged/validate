@@ -15,6 +15,7 @@ class IntegerValidatorTest extends TestCase
       [3, true],
       [4, true],
       [5, false],
+      [3.2, false],
     ];
   }
 
