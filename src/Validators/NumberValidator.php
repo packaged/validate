@@ -14,7 +14,7 @@ class NumberValidator extends AbstractValidator
     if(($maxValue !== null) && ($minValue !== null) && ($maxValue < $minValue))
     {
       throw new \InvalidArgumentException(
-        'maxLength must be greater than or equal to minLength'
+        'maxValue must be greater than or equal to minValue'
       );
     }
     $this->_minValue = $minValue;
