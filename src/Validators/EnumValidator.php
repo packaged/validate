@@ -21,6 +21,12 @@ class EnumValidator extends AbstractValidator
 
   protected function _doValidate($value): Generator
   {
+    if(($value === null || $value === '') && empty($this->_getAllowedValues()))
+    {
+      // this is always valid
+      return null;
+    }
+
     if($this->_getCaseSensitive())
     {
       if(!in_array($value, $this->_getAllowedValues()))

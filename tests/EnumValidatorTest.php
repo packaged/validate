@@ -48,4 +48,10 @@ class EnumValidatorTest extends TestCase
     $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_4));
     $this->assertNotEmpty($validator->validate('unknown value'));
   }
+
+  public function testEmptyValues()
+  {
+    $validator = new EnumValidator([]);
+    $this->assertTrue($validator->isValid(null));
+  }
 }
