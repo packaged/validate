@@ -53,5 +53,12 @@ class EnumValidatorTest extends TestCase
   {
     $validator = new EnumValidator([]);
     $this->assertTrue($validator->isValid(null));
+    $this->assertTrue($validator->isValid(''));
+    $this->assertFalse($validator->isValid('test'));
+
+    $validator = new EnumValidator(['test']);
+    $this->assertFalse($validator->isValid(null));
+    $this->assertFalse($validator->isValid(''));
+    $this->assertTrue($validator->isValid('test'));
   }
 }
