@@ -51,4 +51,13 @@ class BoolValidatorTest extends TestCase
       $this->assertEquals('Invalid boolean value', $errors[0]->getMessage());
     }
   }
+
+  public function testAssertion()
+  {
+    $val = new BoolValidator();
+    $val->assert(true);
+    $val->assert(false);
+    $this->expectException(ValidationException::class);
+    $val->assert('nope');
+  }
 }

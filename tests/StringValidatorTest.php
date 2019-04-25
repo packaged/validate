@@ -23,6 +23,7 @@ class StringValidatorTest extends TestCase
       [100, 0],
       [101, 0],
       [5, 15],
+      [15, 5],
     ];
   }
 
@@ -34,6 +35,10 @@ class StringValidatorTest extends TestCase
    */
   public function testStringValidator($minLen, $maxLen)
   {
+    if(($maxLen > 0) && ($minLen > $maxLen))
+    {
+      $this->expectException(\InvalidArgumentException::class);
+    }
     $validator = new StringValidator($minLen, $maxLen);
 
     $strings = [
