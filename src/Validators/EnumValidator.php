@@ -35,6 +35,7 @@ class EnumValidator extends AbstractValidator
       if(strcasecmp($allowedValue, $value) == 0)
       {
         $result = true;
+        break;
       }
     }
     if(!$result)
