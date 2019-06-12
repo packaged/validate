@@ -12,6 +12,7 @@ class EmailValidatorTest extends TestCase
       ['test@here', false],
       ['test@test.com', true],
       ['TeSt@TeSt.CoM', true],
+      ['email+testbit@test.domain.com', true],
       ['123-test.user.one@test.domain.com', true],
       ['-_@-.co', true],
       ['.test@test.com', false],
