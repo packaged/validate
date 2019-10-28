@@ -21,4 +21,13 @@ class OptionalValidator extends AbstractValidator
       yield $error;
     }
   }
+
+  /**
+   * @return IValidator
+   */
+  public function getValidator(): IValidator
+  {
+    return $this->_validator;
+  }
+
 }
