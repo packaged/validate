@@ -42,4 +42,13 @@ class DecimalValidator extends NumberValidator
       }
     }
   }
+
+  /**
+   * @return int
+   */
+  public function getDecimalPlaces(): int
+  {
+    return $this->_decimalPlaces;
+  }
+
 }

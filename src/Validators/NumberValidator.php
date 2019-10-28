@@ -36,4 +36,21 @@ class NumberValidator extends AbstractValidator
       yield $this->_makeError('must be less than ' . $this->_maxValue);
     }
   }
+
+  /**
+   * @return null
+   */
+  public function getMinValue()
+  {
+    return $this->_minValue;
+  }
+
+  /**
+   * @return null
+   */
+  public function getMaxValue()
+  {
+    return $this->_maxValue;
+  }
+
 }

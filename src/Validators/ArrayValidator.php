@@ -44,4 +44,21 @@ class ArrayValidator extends AbstractValidator
       }
     }
   }
+
+  /**
+   * @return int
+   */
+  public function getMinCount(): int
+  {
+    return $this->_minCount;
+  }
+
+  /**
+   * @return int
+   */
+  public function getMaxCount(): int
+  {
+    return $this->_maxCount;
+  }
+
 }

@@ -27,7 +27,7 @@ class EnumValidator extends AbstractValidator
       return null;
     }
 
-    if($this->_getCaseSensitive())
+    if($this->isCaseSensitive())
     {
       if(!in_array($value, $this->_getAllowedValues()))
       {
@@ -55,8 +55,14 @@ class EnumValidator extends AbstractValidator
     return $this->_allowedValues;
   }
 
-  protected function _getCaseSensitive()
+  public function getAllowedValues(): array
   {
-    return $this->_caseSensitive;
+    return $this->_getAllowedValues();
   }
+
+  public function isCaseSensitive(): bool
+  {
+    return $this->isCaseSensitive();
+  }
+
 }

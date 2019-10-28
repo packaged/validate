@@ -26,4 +26,13 @@ class RegexValidator extends AbstractValidator
       yield $this->_makeError($this->_message);
     }
   }
+
+  /**
+   * @return string
+   */
+  public function getPattern(): string
+  {
+    return $this->_pattern;
+  }
+
 }

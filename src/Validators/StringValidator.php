@@ -37,4 +37,21 @@ class StringValidator extends AbstractValidator
       yield $this->_makeError('must be no more than ' . $this->_maxLength . ' characters');
     }
   }
+
+  /**
+   * @return int
+   */
+  public function getMinLength(): int
+  {
+    return $this->_minLength;
+  }
+
+  /**
+   * @return int
+   */
+  public function getMaxLength(): int
+  {
+    return $this->_maxLength;
+  }
+
 }
