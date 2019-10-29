@@ -62,7 +62,7 @@ class EnumValidator extends AbstractValidator
 
   public function isCaseSensitive(): bool
   {
-    return $this->isCaseSensitive();
+    return $this->_caseSensitive;
   }
 
 }
