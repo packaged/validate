@@ -8,7 +8,10 @@ use Packaged\Validate\Validators\ConstEnumValidator;
 use Packaged\Validate\Validators\EmailValidator;
 use Packaged\Validate\Validators\EnumValidator;
 use Packaged\Validate\Validators\IntegerValidator;
+use Packaged\Validate\Validators\IPv4AddressValidator;
 use Packaged\Validate\Validators\MultiValidator;
+use Packaged\Validate\Validators\RegexValidator;
+use Packaged\Validate\Validators\SchemaValidator;
 use Packaged\Validate\Validators\StringValidator;
 
 class Validation
@@ -25,24 +28,24 @@ class Validation
     if(empty(static::$_validators))
     {
       static::$_validators = $_validators = [
-        ArrayKeysValidator::serializeType() => ArrayKeysValidator::class,
-        ArrayValidator::serializeType()     => ArrayValidator::class,
-        BoolValidator::serializeType()      => BoolValidator::class,
-        ConstEnumValidator::serializeType() => ConstEnumValidator::class,
-        //DecimalValidator::serializeType()    => DecimalValidator::class,
-        EmailValidator::serializeType()     => EmailValidator::class,
-        EnumValidator::serializeType()      => EnumValidator::class,
-        //EqualValidator::serializeType()      => EqualValidator::class,
-        IntegerValidator::serializeType()   => IntegerValidator::class,
-        //IPv4ValidatorTest::serializeType()   => IPv4ValidatorTest::class,
-        MultiValidator::serializeType()     => MultiValidator::class,
-        //NullableValidator::serializeType()   => NullableValidator::class,
-        //NumberValidator::serializeType()     => NumberValidator::class,
-        //OptionalValidator::serializeType()   => OptionalValidator::class,
-        //PropertiesValidator::serializeType() => PropertiesValidator::class,
-        //RegexValidator::serializeType()      => RegexValidator::class,
-        //SchemaValidator::serializeType()     => SchemaValidator::class,
-        StringValidator::serializeType()    => StringValidator::class,
+        ArrayKeysValidator::serializeType()   => ArrayKeysValidator::class,
+        ArrayValidator::serializeType()       => ArrayValidator::class,
+        BoolValidator::serializeType()        => BoolValidator::class,
+        ConstEnumValidator::serializeType()   => ConstEnumValidator::class,
+        //        DecimalValidator::serializeType()    => DecimalValidator::class,
+        EmailValidator::serializeType()       => EmailValidator::class,
+        EnumValidator::serializeType()        => EnumValidator::class,
+        //        EqualValidator::serializeType()      => EqualValidator::class,
+        IntegerValidator::serializeType()     => IntegerValidator::class,
+        IPv4AddressValidator::serializeType() => IPv4AddressValidator::class,
+        MultiValidator::serializeType()       => MultiValidator::class,
+        //        NullableValidator::serializeType()   => NullableValidator::class,
+        //        NumberValidator::serializeType()     => NumberValidator::class,
+        //        OptionalValidator::serializeType()   => OptionalValidator::class,
+        //        PropertiesValidator::serializeType() => PropertiesValidator::class,
+        RegexValidator::serializeType()       => RegexValidator::class,
+        SchemaValidator::serializeType()      => SchemaValidator::class,
+        StringValidator::serializeType()      => StringValidator::class,
       ];
     }
   }

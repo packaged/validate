@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Validate\Tests;
 
+use Packaged\Validate\Validation;
 use Packaged\Validate\Validators\IPv4AddressValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -39,5 +40,17 @@ class IPv4ValidatorTest extends TestCase
     {
       $this->assertNotEmpty($errors);
     }
+  }
+
+  public function testSerialize()
+  {
+    $validator = new IPv4AddressValidator();
+    $this->assertTrue($validator->isValid('255.255.255.255'));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertTrue($validator->isValid('255.255.255.255'));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
   }
 }
