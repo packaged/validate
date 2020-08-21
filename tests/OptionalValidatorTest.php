@@ -20,5 +20,11 @@ class OptionalValidatorTest extends TestCase
     $this->assertFalse($oValidator->isValid(''));
     $this->assertFalse($oValidator->isValid('wrong'));
     $this->assertTrue($oValidator->isValid('correct'));
+
+    $oValidator = new OptionalValidator($eValidator, true);
+    $this->assertTrue($oValidator->isValid(null));
+    $this->assertTrue($oValidator->isValid(''));
+    $this->assertFalse($oValidator->isValid('wrong'));
+    $this->assertTrue($oValidator->isValid('correct'));
   }
 }
