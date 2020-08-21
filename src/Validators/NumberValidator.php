@@ -2,9 +2,10 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class NumberValidator extends AbstractValidator
+class NumberValidator extends AbstractSerializableValidator
 {
   protected $_minValue;
   protected $_maxValue;
@@ -19,6 +20,19 @@ class NumberValidator extends AbstractValidator
     }
     $this->_minValue = $minValue;
     $this->_maxValue = $maxValue;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->minValue, $configuration->maxValue);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'minValue' => $this->_minValue,
+      'maxValue' => $this->_maxValue,
+    ];
   }
 
   protected function _doValidate($value): Generator

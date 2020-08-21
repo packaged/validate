@@ -2,10 +2,11 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
 use Packaged\Validate\IValidator;
+use Packaged\Validate\SerializableValidator;
 
-class OptionalValidator extends AbstractValidator
+class OptionalValidator extends AbstractSerializableValidator
 {
   protected $_validator;
   protected $_allowEmpty = true;
@@ -16,6 +17,18 @@ class OptionalValidator extends AbstractValidator
   public function __construct(IValidator $validator)
   {
     $this->_validator = $validator;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->validator);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'validator' => $this->_validator,
+    ];
   }
 
   protected function _doValidate($value): Generator

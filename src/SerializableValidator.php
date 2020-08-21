@@ -7,5 +7,5 @@ interface SerializableValidator extends \JsonSerializable, IValidator
 
   public static function deserialize($configuration): SerializableValidator;
 
-  public function serialize();
+  public function serialize(): array;
 }

@@ -2,9 +2,10 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class EqualValidator extends AbstractValidator
+class EqualValidator extends AbstractSerializableValidator
 {
   protected $_expect;
 
@@ -20,4 +21,17 @@ class EqualValidator extends AbstractValidator
       yield $this->_makeError('value does not match');
     }
   }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->expect);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'expect' => $this->_expect,
+    ];
+  }
+
 }

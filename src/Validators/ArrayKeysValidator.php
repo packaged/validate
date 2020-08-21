@@ -26,7 +26,7 @@ class ArrayKeysValidator extends AbstractSerializableValidator
     return new static($configuration->required, $configuration->allowUnknown);
   }
 
-  public function serialize()
+  public function serialize(): array
   {
     return [
       'required'     => $this->_requiredEntries,

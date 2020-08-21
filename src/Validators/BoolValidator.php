@@ -2,10 +2,21 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class BoolValidator extends AbstractValidator
+class BoolValidator extends AbstractSerializableValidator
 {
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static();
+  }
+
+  public function serialize(): array
+  {
+    return [];
+  }
+
   protected function _doValidate($value): Generator
   {
     if(is_string($value))

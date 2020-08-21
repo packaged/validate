@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Validate\Tests;
 
+use Packaged\Validate\Validation;
 use Packaged\Validate\ValidationException;
 use Packaged\Validate\Validators\BoolValidator;
 use PHPUnit\Framework\TestCase;
@@ -59,5 +60,17 @@ class BoolValidatorTest extends TestCase
     $val->assert(false);
     $this->expectException(ValidationException::class);
     $val->assert('nope');
+  }
+
+  public function testSerialize()
+  {
+    $validator = new BoolValidator();
+    $this->assertEquals(true, $validator->isValid(true));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertEquals(true, $validator->isValid(true));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
   }
 }

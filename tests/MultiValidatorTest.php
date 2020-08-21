@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Validate\Tests;
 
+use Packaged\Validate\Validation;
 use Packaged\Validate\Validators\EmailValidator;
 use Packaged\Validate\Validators\MultiValidator;
 use Packaged\Validate\Validators\StringValidator;
@@ -22,5 +23,17 @@ class MultiValidatorTest extends TestCase
 
     $test3 = $validator->validate('tom.kay@jdi.io');
     $this->assertEmpty($test3);
+  }
+
+  public function testSerialize()
+  {
+    $validator = new MultiValidator(new StringValidator(10), new EmailValidator());
+    $this->assertTrue($validator->isValid('tom.kay@jdi.io'));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertTrue($unsValidator->isValid('tom.kay@jdi.io'));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
   }
 }

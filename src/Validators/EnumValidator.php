@@ -2,9 +2,10 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class EnumValidator extends AbstractValidator
+class EnumValidator extends AbstractSerializableValidator
 {
   protected $_allowedValues;
   protected $_caseSensitive;
@@ -17,6 +18,19 @@ class EnumValidator extends AbstractValidator
   {
     $this->_allowedValues = $allowedValues;
     $this->_caseSensitive = $caseSensitive;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->allowedValues, $configuration->caseSensitive);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'allowedValues' => $this->_allowedValues,
+      'caseSensitive' => $this->_caseSensitive,
+    ];
   }
 
   protected function _doValidate($value): Generator

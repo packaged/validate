@@ -2,6 +2,7 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
+use Packaged\Validate\SerializableValidator;
 
 class DecimalValidator extends NumberValidator
 {
@@ -20,6 +21,20 @@ class DecimalValidator extends NumberValidator
   {
     parent::__construct($minValue, $maxValue);
     $this->_decimalPlaces = $decimalPlaces;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->decimalPlaces, $configuration->minValue, $configuration->maxValue);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'decimalPlaces' => $this->_decimalPlaces,
+      'minValue'      => $this->_minValue,
+      'maxValue'      => $this->_maxValue,
+    ];
   }
 
   protected function _doValidate($value): Generator

@@ -2,9 +2,10 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class StringValidator extends AbstractValidator
+class StringValidator extends AbstractSerializableValidator
 {
   protected $_minLength;
   protected $_maxLength;
@@ -23,6 +24,19 @@ class StringValidator extends AbstractValidator
     }
     $this->_minLength = $minLength;
     $this->_maxLength = $maxLength;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->minLength, $configuration->maxLength);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'minLength' => $this->_minLength,
+      'maxLength' => $this->_maxLength,
+    ];
   }
 
   protected function _doValidate($value): Generator

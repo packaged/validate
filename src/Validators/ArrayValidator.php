@@ -2,10 +2,12 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
 use Packaged\Validate\IValidator;
+use Packaged\Validate\SerializableValidator;
+use Packaged\Validate\Validation;
 
-class ArrayValidator extends AbstractValidator
+class ArrayValidator extends AbstractSerializableValidator
 {
   protected $_validator;
   protected $_minCount;
@@ -16,6 +18,24 @@ class ArrayValidator extends AbstractValidator
     $this->_validator = $validator;
     $this->_minCount = $minCount;
     $this->_maxCount = $maxCount;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static(
+      Validation::fromJsonObject($configuration->validator),
+      $configuration->minCount,
+      $configuration->maxCount
+    );
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'validator' => $this->_validator,
+      'minCount'  => $this->_minCount,
+      'maxCount'  => $this->_maxCount,
+    ];
   }
 
   protected function _doValidate($value): Generator

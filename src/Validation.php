@@ -2,6 +2,12 @@
 namespace Packaged\Validate;
 
 use Packaged\Validate\Validators\ArrayKeysValidator;
+use Packaged\Validate\Validators\ArrayValidator;
+use Packaged\Validate\Validators\BoolValidator;
+use Packaged\Validate\Validators\EmailValidator;
+use Packaged\Validate\Validators\IntegerValidator;
+use Packaged\Validate\Validators\MultiValidator;
+use Packaged\Validate\Validators\StringValidator;
 
 class Validation
 {
@@ -18,23 +24,23 @@ class Validation
     {
       static::$_validators = $_validators = [
         ArrayKeysValidator::serializeType() => ArrayKeysValidator::class,
-        //ArrayValidator::serializeType()      => ArrayValidator::class,
-        //BoolValidator::serializeType()       => BoolValidator::class,
+        ArrayValidator::serializeType()     => ArrayValidator::class,
+        BoolValidator::serializeType()      => BoolValidator::class,
         //ConstEnumValidator::serializeType()  => ConstEnumValidator::class,
         //DecimalValidator::serializeType()    => DecimalValidator::class,
-        //EmailValidator::serializeType()      => EmailValidator::class,
+        EmailValidator::serializeType()     => EmailValidator::class,
         //EnumValidator::serializeType()       => EnumValidator::class,
         //EqualValidator::serializeType()      => EqualValidator::class,
-        //IntegerValidator::serializeType()    => IntegerValidator::class,
+        IntegerValidator::serializeType()   => IntegerValidator::class,
         //IPv4ValidatorTest::serializeType()   => IPv4ValidatorTest::class,
-        //MultiValidator::serializeType()      => MultiValidator::class,
+        MultiValidator::serializeType()     => MultiValidator::class,
         //NullableValidator::serializeType()   => NullableValidator::class,
         //NumberValidator::serializeType()     => NumberValidator::class,
         //OptionalValidator::serializeType()   => OptionalValidator::class,
         //PropertiesValidator::serializeType() => PropertiesValidator::class,
         //RegexValidator::serializeType()      => RegexValidator::class,
         //SchemaValidator::serializeType()     => SchemaValidator::class,
-        //StringValidator::serializeType()     => StringValidator::class,
+        StringValidator::serializeType()    => StringValidator::class,
       ];
     }
   }

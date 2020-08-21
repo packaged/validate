@@ -2,11 +2,13 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
 use Packaged\Validate\IDataSetValidator;
 use Packaged\Validate\IValidator;
+use Packaged\Validate\SerializableValidator;
+use Packaged\Validate\Validation;
 
-class RemoteValidator extends AbstractValidator implements IDataSetValidator
+class RemoteValidator extends AbstractSerializableValidator implements IDataSetValidator
 {
   protected $_validators;
   protected $_field;
@@ -14,6 +16,26 @@ class RemoteValidator extends AbstractValidator implements IDataSetValidator
   public function __construct($field)
   {
     $this->_field = $field;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    $validator = new static($configuration->field);
+    $validator->_validators = $configuration->validators;
+    foreach($validator->_validators as $k => $v)
+    {
+      $validator->_validators[$k]['validator'] = Validation::fromJsonObject($v['validator']);
+      $validator->_validators[$k]['remoteValidator'] = Validation::fromJsonObject($v['remoteValidator']);
+    }
+    return $validator;
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'field'      => $this->_field,
+      'validators' => $this->_validators,
+    ];
   }
 
   protected function _doValidate($values): Generator

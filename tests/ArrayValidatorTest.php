@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Validate\Tests;
 
+use Packaged\Validate\Validation;
 use Packaged\Validate\Validators\ArrayValidator;
 use Packaged\Validate\Validators\IntegerValidator;
 use Packaged\Validate\Validators\StringValidator;
@@ -55,5 +56,17 @@ class ArrayValidatorTest extends TestCase
     $this->assertEquals(false, $validator->isValid([2, 6]));
 
     $validator->assert([7]);
+  }
+
+  public function testSerialize()
+  {
+    $validator = new ArrayValidator(new IntegerValidator(3, 5), 2, 2);
+    $this->assertEquals(true, $validator->isValid([3, 5]));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertEquals(true, $validator->isValid([3, 5]));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
   }
 }

@@ -2,11 +2,14 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
+use Packaged\Validate\AbstractSerializableValidator;
 use Packaged\Validate\AbstractValidator;
 use Packaged\Validate\IValidator;
+use Packaged\Validate\SerializableValidator;
+use Packaged\Validate\Validation;
 use Packaged\Validate\ValidationException;
 
-class SchemaValidator extends AbstractValidator
+class SchemaValidator extends AbstractSerializableValidator
 {
   /**
    * @var IValidator[]
@@ -27,6 +30,24 @@ class SchemaValidator extends AbstractValidator
   {
     $this->addFields($fieldValidators);
     $this->_keyValidator = $keyValidator;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    $validators = [];
+    foreach($configuration->validators as $v)
+    {
+      $validators[] = Validation::fromJsonObject($v);
+    }
+    return new static($validators, Validation::fromJsonObject($configuration->keyValidator));
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'validators'   => $this->_validators,
+      'keyValidator' => $this->_keyValidator,
+    ];
   }
 
   public function addField($name, IValidator $validator)

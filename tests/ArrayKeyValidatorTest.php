@@ -48,5 +48,6 @@ class ArrayKeyValidatorTest extends TestCase
     $unsValidator = Validation::fromJsonObject(json_decode($jsn));
     $this->assertInstanceOf(get_class($validator), $unsValidator);
     $this->assertEquals($expectedValid, $unsValidator->isValid($test));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
   }
 }

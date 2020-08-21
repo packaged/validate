@@ -2,9 +2,10 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class RegexValidator extends AbstractValidator
+class RegexValidator extends AbstractSerializableValidator
 {
   protected $_pattern;
   protected $_message;
@@ -17,6 +18,19 @@ class RegexValidator extends AbstractValidator
   {
     $this->_pattern = $pattern;
     $this->_message = $message;
+  }
+
+  public static function deserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->pattern, $configuration->message);
+  }
+
+  public function serialize(): array
+  {
+    return [
+      'pattern' => $this->_pattern,
+      'message' => $this->_message,
+    ];
   }
 
   protected function _doValidate($value): Generator
