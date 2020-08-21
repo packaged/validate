@@ -5,11 +5,17 @@ use Packaged\Validate\Validators\ArrayKeysValidator;
 use Packaged\Validate\Validators\ArrayValidator;
 use Packaged\Validate\Validators\BoolValidator;
 use Packaged\Validate\Validators\ConstEnumValidator;
+use Packaged\Validate\Validators\DecimalValidator;
 use Packaged\Validate\Validators\EmailValidator;
 use Packaged\Validate\Validators\EnumValidator;
+use Packaged\Validate\Validators\EqualValidator;
 use Packaged\Validate\Validators\IntegerValidator;
 use Packaged\Validate\Validators\IPv4AddressValidator;
 use Packaged\Validate\Validators\MultiValidator;
+use Packaged\Validate\Validators\NullableValidator;
+use Packaged\Validate\Validators\NumberValidator;
+use Packaged\Validate\Validators\OptionalValidator;
+use Packaged\Validate\Validators\PropertiesValidator;
 use Packaged\Validate\Validators\RegexValidator;
 use Packaged\Validate\Validators\SchemaValidator;
 use Packaged\Validate\Validators\StringValidator;
@@ -17,11 +23,6 @@ use Packaged\Validate\Validators\StringValidator;
 class Validation
 {
   protected static $_validators = [];
-
-  public function __construct()
-  {
-
-  }
 
   public static function bind()
   {
@@ -32,17 +33,17 @@ class Validation
         ArrayValidator::serializeType()       => ArrayValidator::class,
         BoolValidator::serializeType()        => BoolValidator::class,
         ConstEnumValidator::serializeType()   => ConstEnumValidator::class,
-        //        DecimalValidator::serializeType()    => DecimalValidator::class,
+        DecimalValidator::serializeType()     => DecimalValidator::class,
         EmailValidator::serializeType()       => EmailValidator::class,
         EnumValidator::serializeType()        => EnumValidator::class,
-        //        EqualValidator::serializeType()      => EqualValidator::class,
+        EqualValidator::serializeType()       => EqualValidator::class,
         IntegerValidator::serializeType()     => IntegerValidator::class,
         IPv4AddressValidator::serializeType() => IPv4AddressValidator::class,
         MultiValidator::serializeType()       => MultiValidator::class,
-        //        NullableValidator::serializeType()   => NullableValidator::class,
-        //        NumberValidator::serializeType()     => NumberValidator::class,
-        //        OptionalValidator::serializeType()   => OptionalValidator::class,
-        //        PropertiesValidator::serializeType() => PropertiesValidator::class,
+        NullableValidator::serializeType()    => NullableValidator::class,
+        NumberValidator::serializeType()      => NumberValidator::class,
+        OptionalValidator::serializeType()    => OptionalValidator::class,
+        PropertiesValidator::serializeType()  => PropertiesValidator::class,
         RegexValidator::serializeType()       => RegexValidator::class,
         SchemaValidator::serializeType()      => SchemaValidator::class,
         StringValidator::serializeType()      => StringValidator::class,
