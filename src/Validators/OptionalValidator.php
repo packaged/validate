@@ -8,16 +8,14 @@ use Packaged\Validate\IValidator;
 class OptionalValidator extends AbstractValidator
 {
   protected $_validator;
-  protected $_allowEmptyString = false;
+  protected $_allowEmpty = true;
 
   /**
    * @param IValidator $validator
-   * @param bool       $allowEmptyString If true then treat empty strings as nulls
    */
-  public function __construct(IValidator $validator, $allowEmptyString = false)
+  public function __construct(IValidator $validator)
   {
     $this->_validator = $validator;
-    $this->_allowEmptyString = $allowEmptyString;
   }
 
   protected function _doValidate($value): Generator
@@ -26,7 +24,8 @@ class OptionalValidator extends AbstractValidator
     {
       return;
     }
-    if($this->_allowEmptyString && ($value === ''))
+
+    if($this->_allowEmpty && empty($value))
     {
       return;
     }

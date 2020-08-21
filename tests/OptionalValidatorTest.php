@@ -2,6 +2,7 @@
 namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\Validators\EqualValidator;
+use Packaged\Validate\Validators\NullableValidator;
 use Packaged\Validate\Validators\OptionalValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -15,15 +16,17 @@ class OptionalValidatorTest extends TestCase
     $this->assertFalse($eValidator->isValid('wrong'));
     $this->assertTrue($eValidator->isValid('correct'));
 
-    $oValidator = new OptionalValidator($eValidator);
+    $oValidator = new NullableValidator($eValidator);
     $this->assertTrue($oValidator->isValid(null));
     $this->assertFalse($oValidator->isValid(''));
+    $this->assertFalse($oValidator->isValid(0));
     $this->assertFalse($oValidator->isValid('wrong'));
     $this->assertTrue($oValidator->isValid('correct'));
 
-    $oValidator = new OptionalValidator($eValidator, true);
+    $oValidator = new OptionalValidator($eValidator);
     $this->assertTrue($oValidator->isValid(null));
     $this->assertTrue($oValidator->isValid(''));
+    $this->assertTrue($oValidator->isValid(0));
     $this->assertFalse($oValidator->isValid('wrong'));
     $this->assertTrue($oValidator->isValid('correct'));
   }
