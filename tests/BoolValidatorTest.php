@@ -1,5 +1,5 @@
 <?php
-namespace Packaged\Validate\Validators\Tests;
+namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\ValidationException;
 use Packaged\Validate\Validators\BoolValidator;

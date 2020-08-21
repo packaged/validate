@@ -40,7 +40,6 @@ class EnumValidatorTest extends TestCase
 
   public function testConstEnum()
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
     $validator = new ConstEnumValidator(ConstTestClass::class);
     $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_1));
     $this->assertEmpty($validator->validate(ConstTestClass::TEST_CONST_2));

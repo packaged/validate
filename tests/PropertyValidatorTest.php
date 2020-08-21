@@ -1,7 +1,6 @@
 <?php
-namespace Packaged\Validate\Validators\Tests;
+namespace Packaged\Validate\Tests;
 
-use Packaged\Validate\Tests\ObjectTest;
 use Packaged\Validate\Validators\PropertiesValidator;
 use PHPUnit\Framework\TestCase;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Packaged\Validate\Validators\Tests;
+namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\Validators\ArrayKeysValidator;
 use Packaged\Validate\Validators\ArrayValidator;
