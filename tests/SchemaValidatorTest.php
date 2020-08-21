@@ -191,7 +191,7 @@ class SchemaValidatorTest extends TestCase
         ]
       )
     );
-    $this->assertNotEmpty(
+    $this->assertEmpty(
       $validator->validate(
         [
           'required1' => 'some data',

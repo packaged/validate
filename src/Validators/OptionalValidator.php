@@ -16,9 +16,12 @@ class OptionalValidator extends AbstractValidator
 
   protected function _doValidate($value): Generator
   {
-    foreach($this->_validator->validate($value) as $error)
+    if($value !== null)
     {
-      yield $error;
+      foreach($this->_validator->validate($value) as $error)
+      {
+        yield $error;
+      }
     }
   }
 
