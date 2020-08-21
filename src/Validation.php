@@ -41,12 +41,12 @@ class Validation
 
   public static function fromJsonObject(\stdClass $o): ?SerializableValidator
   {
-    if(isset($o->type) && isset($o->config))
+    if(isset($o->t) && isset($o->c))
     {
       static::bind();
       /** @var SerializableValidator $class */
-      $class = static::$_validators[$o->type];
-      return $class::validateUnserialize($o->config);
+      $class = static::$_validators[$o->t];
+      return $class::deserialize($o->c);
     }
     return null;
   }
