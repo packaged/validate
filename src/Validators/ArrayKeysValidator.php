@@ -2,9 +2,10 @@
 namespace Packaged\Validate\Validators;
 
 use Generator;
-use Packaged\Validate\AbstractValidator;
+use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\SerializableValidator;
 
-class ArrayKeysValidator extends AbstractValidator
+class ArrayKeysValidator extends AbstractSerializableValidator
 {
   protected $_requiredEntries;
   protected $_allowUnknownEntries;
@@ -18,6 +19,19 @@ class ArrayKeysValidator extends AbstractValidator
   {
     $this->_requiredEntries = $requiredEntries;
     $this->_allowUnknownEntries = $allowUnknownEntries;
+  }
+
+  public static function validateUnserialize($configuration): SerializableValidator
+  {
+    return new static($configuration->required, $configuration->allowUnknown);
+  }
+
+  public function validateSerialize()
+  {
+    return [
+      'required'     => $this->_requiredEntries,
+      'allowUnknown' => $this->_allowUnknownEntries,
+    ];
   }
 
   protected function _doValidate($value): Generator

@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Validate\Tests;
 
+use Packaged\Validate\Validation;
 use Packaged\Validate\Validators\ArrayKeysValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -29,5 +30,23 @@ class ArrayKeyValidatorTest extends TestCase
   {
     $validator = new ArrayKeysValidator(['test1', 'test2', 'test3'], $allowUnknown);
     $this->assertEquals($expectedValid, $validator->isValid($test));
+  }
+
+  /**
+   * @dataProvider arrayProvider
+   *
+   * @param $test
+   * @param $allowUnknown
+   * @param $expectedValid
+   */
+  public function testSerialize($test, $allowUnknown, $expectedValid)
+  {
+    $validator = new ArrayKeysValidator(['test1', 'test2', 'test3'], $allowUnknown);
+    $this->assertEquals($expectedValid, $validator->isValid($test));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertEquals($expectedValid, $unsValidator->isValid($test));
   }
 }

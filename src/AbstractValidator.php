@@ -3,7 +3,7 @@ namespace Packaged\Validate;
 
 use Generator;
 
-abstract class AbstractValidator implements IValidator
+abstract class AbstractValidator implements IValidator, \JsonSerializable
 {
   protected function _makeError(string $message): ValidationException
   {
@@ -71,4 +71,10 @@ abstract class AbstractValidator implements IValidator
     }
     return true;
   }
+
+  public function jsonSerialize()
+  {
+    return [];
+  }
+
 }
