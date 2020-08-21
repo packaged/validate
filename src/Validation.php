@@ -4,7 +4,9 @@ namespace Packaged\Validate;
 use Packaged\Validate\Validators\ArrayKeysValidator;
 use Packaged\Validate\Validators\ArrayValidator;
 use Packaged\Validate\Validators\BoolValidator;
+use Packaged\Validate\Validators\ConstEnumValidator;
 use Packaged\Validate\Validators\EmailValidator;
+use Packaged\Validate\Validators\EnumValidator;
 use Packaged\Validate\Validators\IntegerValidator;
 use Packaged\Validate\Validators\MultiValidator;
 use Packaged\Validate\Validators\StringValidator;
@@ -26,10 +28,10 @@ class Validation
         ArrayKeysValidator::serializeType() => ArrayKeysValidator::class,
         ArrayValidator::serializeType()     => ArrayValidator::class,
         BoolValidator::serializeType()      => BoolValidator::class,
-        //ConstEnumValidator::serializeType()  => ConstEnumValidator::class,
+        ConstEnumValidator::serializeType() => ConstEnumValidator::class,
         //DecimalValidator::serializeType()    => DecimalValidator::class,
         EmailValidator::serializeType()     => EmailValidator::class,
-        //EnumValidator::serializeType()       => EnumValidator::class,
+        EnumValidator::serializeType()      => EnumValidator::class,
         //EqualValidator::serializeType()      => EqualValidator::class,
         IntegerValidator::serializeType()   => IntegerValidator::class,
         //IPv4ValidatorTest::serializeType()   => IPv4ValidatorTest::class,

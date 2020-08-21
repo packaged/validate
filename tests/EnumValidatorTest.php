@@ -3,6 +3,7 @@ namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\IValidator;
 use Packaged\Validate\Tests\Supporting\ConstTestClass;
+use Packaged\Validate\Validation;
 use Packaged\Validate\Validators\ConstEnumValidator;
 use Packaged\Validate\Validators\EnumValidator;
 use Packaged\Validate\Validators\SchemaValidator;
@@ -59,5 +60,31 @@ class EnumValidatorTest extends TestCase
     $this->assertFalse($validator->isValid(null));
     $this->assertFalse($validator->isValid(''));
     $this->assertTrue($validator->isValid('test'));
+  }
+
+  public function testSerialize()
+  {
+    $validator = new EnumValidator(['TesT'], true);
+    $this->assertFalse($validator->isValid('test'));
+    $this->assertTrue($validator->isValid('TesT'));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertFalse($validator->isValid('test'));
+    $this->assertTrue($validator->isValid('TesT'));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
+  }
+
+  public function testSerializeConst()
+  {
+    $validator = new ConstEnumValidator(ConstTestClass::class);
+    $this->assertTrue($validator->isValid(ConstTestClass::TEST_CONST_1));
+
+    $jsn = json_encode($validator);
+    $unsValidator = Validation::fromJsonObject(json_decode($jsn));
+    $this->assertInstanceOf(get_class($validator), $unsValidator);
+    $this->assertTrue($validator->isValid(ConstTestClass::TEST_CONST_1));
+    $this->assertEquals(json_encode($validator), json_encode($unsValidator));
   }
 }
