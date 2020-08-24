@@ -7,6 +7,7 @@ use Packaged\Validate\IDataSetValidator;
 use Packaged\Validate\IValidator;
 use Packaged\Validate\SerializableValidator;
 use Packaged\Validate\Validation;
+use stdClass;
 
 class RemoteValidator extends AbstractSerializableValidator implements IDataSetValidator
 {
@@ -24,8 +25,8 @@ class RemoteValidator extends AbstractSerializableValidator implements IDataSetV
     $validator->_validators = $configuration->validators;
     foreach($validator->_validators as $k => $v)
     {
-      $validator->_validators[$k]['validator'] = Validation::fromJsonObject($v['validator']);
-      $validator->_validators[$k]['remoteValidator'] = Validation::fromJsonObject($v['remoteValidator']);
+      $validator->_validators[$k]->validator = Validation::fromJsonObject($v->validator);
+      $validator->_validators[$k]->remoteValidator = Validation::fromJsonObject($v->remoteValidator);
     }
     return $validator;
   }
@@ -48,13 +49,13 @@ class RemoteValidator extends AbstractSerializableValidator implements IDataSetV
     $secondary = [];
     foreach($this->_validators as $validator)
     {
-      if($validator['remoteValidator']->isValid($values[$validator['remoteField']] ?? null))
+      if($validator->remoteValidator->isValid($values[$validator->remoteField] ?? null))
       {
         if(!isset($secondary[$this->_field]))
         {
           $secondary[$this->_field] = [];
         }
-        $secondary[$this->_field][] = $validator['validator'];
+        $secondary[$this->_field][] = $validator->validator;
       }
     }
 
@@ -64,7 +65,10 @@ class RemoteValidator extends AbstractSerializableValidator implements IDataSetV
       foreach($validators as $validator)
       {
         /** @var IValidator $validator */
-        yield $validator->validate($fieldValue);
+        foreach($validator->validate($fieldValue) as $error)
+        {
+          yield $error;
+        }
       }
     }
   }
@@ -72,11 +76,11 @@ class RemoteValidator extends AbstractSerializableValidator implements IDataSetV
   //Validate field if remote validator passes
   public function addValidator(IValidator $validator, string $remoteField, IValidator $remoteValidator)
   {
-    $this->_validators[] = [
-      'validator'       => $validator,
-      'remoteField'     => $remoteField,
-      'remoteValidator' => $remoteValidator,
-    ];
+    $config = new stdClass();
+    $config->validator = $validator;
+    $config->remoteField = $remoteField;
+    $config->remoteValidator = $remoteValidator;
+    $this->_validators[] = $config;
     return $this;
   }
 }
