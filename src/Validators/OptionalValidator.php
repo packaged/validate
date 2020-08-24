@@ -48,4 +48,12 @@ class OptionalValidator extends AbstractSerializableValidator
       yield $error;
     }
   }
+
+  /**
+   * @return IValidator
+   */
+  public function getValidator(): IValidator
+  {
+    return $this->_validator;
+  }
 }
