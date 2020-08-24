@@ -69,22 +69,33 @@ class EnumValidatorTest extends TestCase
     $this->assertTrue($validator->isValid(''));
     $this->assertFalse($validator->isValid('abc'));
     $this->assertFalse($validator->isValid('test'));
+    $this->assertFalse($validator->isValid('TesT'));
     $validator->negate();
     $this->assertFalse($validator->isValid(null));
     $this->assertFalse($validator->isValid(''));
     $this->assertTrue($validator->isValid('abc'));
     $this->assertTrue($validator->isValid('test'));
+    $this->assertTrue($validator->isValid('TesT'));
 
     $validator = new EnumValidator(['test']);
     $this->assertFalse($validator->isValid(null));
     $this->assertFalse($validator->isValid(''));
     $this->assertFalse($validator->isValid('abc'));
     $this->assertTrue($validator->isValid('test'));
+    $this->assertTrue($validator->isValid('TesT'));
     $validator->negate();
     $this->assertTrue($validator->isValid(null));
     $this->assertTrue($validator->isValid(''));
     $this->assertTrue($validator->isValid('abc'));
     $this->assertFalse($validator->isValid('test'));
+    $this->assertFalse($validator->isValid('TesT'));
+
+    $validator = new EnumValidator(['test'], true);
+    $this->assertTrue($validator->isValid('test'));
+    $this->assertFalse($validator->isValid('TesT'));
+    $validator->negate();
+    $this->assertFalse($validator->isValid('test'));
+    $this->assertTrue($validator->isValid('TesT'));
   }
 
   public function testSerialize()

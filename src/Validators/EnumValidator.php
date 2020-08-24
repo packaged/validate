@@ -59,7 +59,7 @@ class EnumValidator extends AbstractSerializableValidator
 
     if($this->isCaseSensitive())
     {
-      if(!in_array($value, $this->_getAllowedValues()))
+      if($this->_negate xor !in_array($value, $this->_getAllowedValues()))
       {
         return $this->_makeError('not a valid value');
       }
