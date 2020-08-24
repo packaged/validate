@@ -9,6 +9,7 @@ class EnumValidator extends AbstractSerializableValidator
 {
   protected $_allowedValues;
   protected $_caseSensitive;
+  protected $_negate;
 
   /**
    * @param string[] $allowedValues
@@ -20,9 +21,20 @@ class EnumValidator extends AbstractSerializableValidator
     $this->_caseSensitive = $caseSensitive;
   }
 
+  public function negate(bool $bool = true)
+  {
+    $this->_negate = $bool;
+    return $this;
+  }
+
   public static function deserialize($configuration): SerializableValidator
   {
-    return new static($configuration->allowedValues, $configuration->caseSensitive);
+    $o = new static($configuration->allowedValues, $configuration->caseSensitive);
+    if($configuration->negate ?? false)
+    {
+      $o->negate();
+    }
+    return $o;
   }
 
   public function serialize(): array
@@ -30,14 +42,18 @@ class EnumValidator extends AbstractSerializableValidator
     return [
       'allowedValues' => $this->_allowedValues,
       'caseSensitive' => $this->_caseSensitive,
+      'negate'        => $this->_negate,
     ];
   }
 
   protected function _doValidate($value): Generator
   {
-    if(($value === null || $value === '') && empty($this->_getAllowedValues()))
+    if(empty($this->_getAllowedValues()))
     {
-      // this is always valid
+      if($this->_negate xor ($value !== null && $value !== ''))
+      {
+        return $this->_makeError('not a valid value');
+      }
       return null;
     }
 
@@ -47,6 +63,7 @@ class EnumValidator extends AbstractSerializableValidator
       {
         return $this->_makeError('not a valid value');
       }
+      return null;
     }
 
     $result = false;
@@ -58,7 +75,7 @@ class EnumValidator extends AbstractSerializableValidator
         break;
       }
     }
-    if(!$result)
+    if($this->_negate xor !$result)
     {
       yield $this->_makeError('not a valid value');
     }
