@@ -5,6 +5,7 @@ use Generator;
 use Packaged\Validate\AbstractSerializableValidator;
 use Packaged\Validate\IValidator;
 use Packaged\Validate\SerializableValidator;
+use Packaged\Validate\Validation;
 
 class OptionalValidator extends AbstractSerializableValidator
 {
@@ -21,7 +22,7 @@ class OptionalValidator extends AbstractSerializableValidator
 
   public static function deserialize($configuration): SerializableValidator
   {
-    return new static($configuration->validator);
+    return new static(Validation::fromJsonObject($configuration->validator));
   }
 
   public function serialize(): array
