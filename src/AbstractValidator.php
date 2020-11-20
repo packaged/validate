@@ -77,4 +77,13 @@ abstract class AbstractValidator implements IValidator, \JsonSerializable
     return [];
   }
 
+  public function getAttributeValue()
+  {
+    $js = $this->jsonSerialize();
+    if($js)
+    {
+      return base64_encode(json_encode($js));
+    }
+    return null;
+  }
 }
