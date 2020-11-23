@@ -83,6 +83,13 @@ test('ConstEnumValidator', () =>
   expect(validateField(i('test', 'ConstEnumValidator', e(['TEST'], true, true)))).toBe(true);
 });
 
+test('EqualValidator', () =>
+{
+  expect(validateField(i('', 'EqualValidator', {expect: 'test'}))).toBe(false);
+  expect(validateField(i('test', 'EqualValidator', {expect: ''}))).toBe(false);
+  expect(validateField(i('test', 'EqualValidator', {expect: 'test'}))).toBe(true);
+});
+
 test('test no form elements', () =>
 {
   expect(validateForm(f())).toBe(true);

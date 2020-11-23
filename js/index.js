@@ -70,7 +70,7 @@ export function validateField(ele)
         }
         break;
       case 'EqualValidator':
-        break;
+        return value === validatorConfig.expect;
       case 'NotEqualValidator':
         break;
       case 'IntegerValidator':
