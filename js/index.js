@@ -5,21 +5,31 @@ import base64 from 'base-64';
  */
 export function validateForm(form)
 {
-  let isValid = true;
+  const keyedErrors = {};
   form.querySelectorAll('[validate]').forEach(
     (ele) =>
     {
-      isValid = isValid && validateField(ele);
+      const errors = validateField(ele);
+      if(errors.length)
+      {
+        const eleName = ele.getAttribute('name');
+        if(!keyedErrors[eleName])
+        {
+          keyedErrors[eleName] = [];
+        }
+        keyedErrors[eleName].push(...errors);
+      }
     });
-  return isValid;
+  return keyedErrors;
 }
 
 /**
  * @param {HTMLElement} ele
- * @return boolean
+ * @return {Array}
  */
 export function validateField(ele)
 {
+  const errors = [];
   const validateAttr = ele.getAttribute('validate');
   if(validateAttr)
   {
@@ -34,19 +44,28 @@ export function validateField(ele)
       case 'ArrayValidator':
         break;
       case 'BoolValidator':
-        if(typeof value === 'boolean')
+        if(typeof value !== 'boolean')
         {
-          return true;
+          if(typeof value === 'string')
+          {
+            if(!(/true|false|0|1/.test(value.toLowerCase())))
+            {
+              errors.push('Invalid boolean value');
+            }
+          }
+          else if(typeof value === 'number')
+          {
+            if(value !== 0 && value !== 1)
+            {
+              errors.push('Invalid boolean value');
+            }
+          }
+          else if(!('checked' in ele))
+          {
+            errors.push('Invalid boolean value');
+          }
         }
-        else if(typeof value === 'string')
-        {
-          return /true|false|0|1/.test(value.toLowerCase());
-        }
-        else if(typeof value === 'number')
-        {
-          return value === 0 || value === 1;
-        }
-        return 'checked' in ele;
+        break;
       case 'DecimalValidator':
         break;
       case 'EmailValidator':
@@ -58,21 +77,26 @@ export function validateField(ele)
           const regex = new RegExp(validatorConfig.allowedValues.join('|'), !!validatorConfig.caseSensitive ? '' : 'i');
           if(validatorConfig.negate ^ !regex.test(value))
           {
-            return false;
+            errors.push('not a valid value');
           }
         }
-        else
+        else if(validatorConfig.negate ^ (value !== null && value !== ''))
         {
-          if(validatorConfig.negate ^ (value !== null && value !== ''))
-          {
-            return false;
-          }
+          errors.push('not a valid value');
         }
         break;
       case 'EqualValidator':
-        return value === validatorConfig.expect;
+        if(value !== validatorConfig.expect)
+        {
+          errors.push('value does not match');
+        }
+        break;
       case 'NotEqualValidator':
-        return value !== validatorConfig.expect;
+        if(value === validatorConfig.expect)
+        {
+          errors.push('value must not match');
+        }
+        break;
       case 'IntegerValidator':
         break;
       case 'IPv4AddressValidator':
@@ -94,30 +118,33 @@ export function validateField(ele)
       case 'RequiredValidator':
         if('checked' in ele)
         {
-          return ele.checked;
+          if(!ele.checked)
+          {
+            errors.push('required');
+          }
         }
-        return ele.hasOwnProperty('value') && ele.value.length > 0;
+        else if(value.length <= 0)
+        {
+          errors.push('required');
+        }
+        break;
       case 'SchemaValidator':
         break;
       case 'StringValidator':
-        if(!('value' in ele))
+        if(typeof value !== 'string')
         {
-          return false;
+          errors.push('not a valid value');
         }
-        if(typeof ele.value !== 'string')
+        else if(value.length < validatorConfig.minLength)
         {
-          return false;
+          errors.push('must be at least ' + validatorConfig.minLength + ' characters');
         }
-        if(validatorConfig.minLength && ele.value.length < validatorConfig.minLength)
+        else if(validatorConfig.maxLength > 0 && value.length > validatorConfig.maxLength)
         {
-          return false;
-        }
-        if(validatorConfig.maxLength && ele.value.length > validatorConfig.maxLength)
-        {
-          return false;
+          errors.push('must be no more than ' + validatorConfig.maxLength + ' characters');
         }
         break;
     }
   }
-  return true;
+  return errors;
 }
