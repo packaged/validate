@@ -55,6 +55,12 @@ test('StringValidator', () =>
   // these get cast as strings 'true' and 'false'
   expect(validateField(i(true, StringValidator, {'minLength': 4, 'maxLength': 4}))).toStrictEqual([]);
   expect(validateField(i(false, StringValidator, {'minLength': 5, 'maxLength': 5}))).toStrictEqual([]);
+
+  // isChanging
+  expect(validateField(i('test', StringValidator, {'minLength': 6, 'maxLength': 6}), true))
+    .toStrictEqual([]);
+  expect(validateField(i('testing', StringValidator, {'minLength': 6, 'maxLength': 6}), true))
+    .toStrictEqual(['must be no more than 6 characters']);
 });
 
 test('BoolValidator', () =>

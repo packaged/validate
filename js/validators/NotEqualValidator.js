@@ -9,7 +9,7 @@ export class NotEqualValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele)
+  validate(value, ele, isChanging = false)
   {
     if(value === this._expect)
     {

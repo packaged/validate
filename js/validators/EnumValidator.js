@@ -13,7 +13,7 @@ export class EnumValidator extends Validator
     this._caseSensitive = !!config.caseSensitive;
   }
 
-  validate(value, ele)
+  validate(value, ele, isChanging = false)
   {
     if(this._allowedValues.length)
     {

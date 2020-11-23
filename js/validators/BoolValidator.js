@@ -6,7 +6,7 @@ export class BoolValidator extends Validator
   {
   }
 
-  validate(value, ele)
+  validate(value, ele, isChanging = false)
   {
     if(typeof value !== 'boolean')
     {

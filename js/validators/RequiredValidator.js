@@ -9,7 +9,7 @@ export class RequiredValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele)
+  validate(value, ele, isChanging = false)
   {
     if('checked' in ele)
     {

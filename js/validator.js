@@ -26,9 +26,10 @@ export class Validator
   /**
    * @param value
    * @param {HTMLElement} ele
+   * @param {Boolean} isChanging
    * @return {Array}
    */
-  validate(value, ele)
+  validate(value, ele, isChanging = false)
   {
     throw 'validate not implemented on ' + this.name;
   }
@@ -44,9 +45,10 @@ export function addValidator(validator)
 
 /**
  * @param {HTMLElement} ele
+ * @param {Boolean} isChanging
  * @return {Array}
  */
-export function validateField(ele)
+export function validateField(ele, isChanging = false)
 {
   const errors = [];
   const validateAttr = ele.getAttribute('validate');
@@ -54,7 +56,7 @@ export function validateField(ele)
   {
     const validator = Validator.fromEncoded(validateAttr);
     const value = 'value' in ele ? ele.value : null;
-    return validator.validate(value, ele);
+    return validator.validate(value, ele, isChanging);
   }
   return errors;
 }

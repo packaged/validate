@@ -11,14 +11,14 @@ export class StringValidator extends Validator
     this._maxLength = config.maxLength;
   }
 
-  validate(value, ele)
+  validate(value, ele, isChanging = false)
   {
     if(typeof value !== 'string')
     {
       return ['not a valid value'];
     }
 
-    if(this._minLength !== null && value.length < this._minLength)
+    if(this._minLength !== null && value.length < this._minLength && (!isChanging))
     {
       return ['must be at least ' + this._minLength + ' characters'];
     }
