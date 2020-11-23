@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {ValidationResponse, Validator} from '../validator';
 
 export class EnumValidator extends Validator
 {
@@ -13,20 +13,20 @@ export class EnumValidator extends Validator
     this._caseSensitive = !!config.caseSensitive;
   }
 
-  validate(value, ele, isChanging = false)
+  validate(value, ele)
   {
     if(this._allowedValues.length)
     {
       const regex = new RegExp(this._allowedValues.join('|'), !!this._caseSensitive ? '' : 'i');
       if(this._negate ^ !regex.test(value))
       {
-        return ['not a valid value'];
+        return ValidationResponse.error(ele, ['not a valid value']);
       }
     }
     else if(this._negate ^ (value !== null && value !== ''))
     {
-      return ['not a valid value'];
+      return ValidationResponse.error(ele, ['not a valid value']);
     }
-    return [];
+    return ValidationResponse.success(ele);
   }
 }

@@ -35,81 +35,85 @@ function e(allowedValues, caseSensitive = true, negate = false)
   return {allowedValues, caseSensitive, negate};
 }
 
+function testSuccess(response)
+{
+  expect(response).toHaveProperty('errors', []);
+}
+
+function testFailure(response, errors, potentiallyValid = false)
+{
+  expect(response).toHaveProperty('errors', errors);
+  expect(response).toHaveProperty('potentiallyValid', potentiallyValid);
+}
+
 test('StringValidator', () =>
 {
-  expect(validateField(i('test', StringValidator))).toStrictEqual([]);
-  expect(validateField(i('', StringValidator))).toStrictEqual([]);
+  testSuccess(validateField(i('test', StringValidator)));
+  testSuccess(validateField(i('', StringValidator)));
 
-  expect(validateField(i('test', StringValidator, {'minLength': 6}))).toStrictEqual(['must be at least 6 characters']);
-  expect(validateField(i('test', StringValidator, {'minLength': 1}))).toStrictEqual([]);
-  expect(validateField(i('', StringValidator, {'minLength': 1}))).toStrictEqual(['must be at least 1 characters']);
+  testFailure(validateField(i('test', StringValidator, {'minLength': 6})), ['must be at least 6 characters'], true);
+  testSuccess(validateField(i('test', StringValidator, {'minLength': 1})));
+  testFailure(validateField(i('', StringValidator, {'minLength': 1})), ['must be at least 1 characters'], true);
 
-  expect(validateField(i('test', StringValidator, {'maxLength': 1})))
-    .toStrictEqual(['must be no more than 1 characters']);
-  expect(validateField(i('t', StringValidator, {'maxLength': 1}))).toStrictEqual([]);
-  expect(validateField(i('', StringValidator, {'maxLength': 1}))).toStrictEqual([]);
+  testFailure(validateField(i('test', StringValidator, {'maxLength': 1})), ['must be no more than 1 characters']);
+  testSuccess(validateField(i('t', StringValidator, {'maxLength': 1})));
+  testSuccess(validateField(i('', StringValidator, {'maxLength': 1})));
 
-  expect(validateField(i('test', StringValidator, {'minLength': 3, 'maxLength': 5}))).toStrictEqual([]);
-  expect(validateField(i('test', StringValidator, {'minLength': 4, 'maxLength': 4}))).toStrictEqual([]);
+  testSuccess(validateField(i('test', StringValidator, {'minLength': 3, 'maxLength': 5})));
+  testSuccess(validateField(i('test', StringValidator, {'minLength': 4, 'maxLength': 4})));
 
   // these get cast as strings 'true' and 'false'
-  expect(validateField(i(true, StringValidator, {'minLength': 4, 'maxLength': 4}))).toStrictEqual([]);
-  expect(validateField(i(false, StringValidator, {'minLength': 5, 'maxLength': 5}))).toStrictEqual([]);
-
-  // isChanging
-  expect(validateField(i('test', StringValidator, {'minLength': 6, 'maxLength': 6}), true))
-    .toStrictEqual([]);
-  expect(validateField(i('testing', StringValidator, {'minLength': 6, 'maxLength': 6}), true))
-    .toStrictEqual(['must be no more than 6 characters']);
+  testSuccess(validateField(i(true, StringValidator, {'minLength': 4, 'maxLength': 4})));
+  testSuccess(validateField(i(false, StringValidator, {'minLength': 5, 'maxLength': 5})));
 });
 
 test('BoolValidator', () =>
 {
-  expect(validateField(i('test', BoolValidator))).toStrictEqual(['Invalid boolean value']);
-  expect(validateField(i('', BoolValidator))).toStrictEqual(['Invalid boolean value']);
+  testFailure(validateField(i('test', BoolValidator)), ['Invalid boolean value']);
+  testFailure(validateField(i('', BoolValidator)), ['Invalid boolean value']);
 
-  expect(validateField(i('1', BoolValidator))).toStrictEqual([]);
-  expect(validateField(i('0', BoolValidator))).toStrictEqual([]);
-  expect(validateField(i('true', BoolValidator))).toStrictEqual([]);
-  expect(validateField(i('false', BoolValidator))).toStrictEqual([]);
+  testSuccess(validateField(i('1', BoolValidator)));
+  testSuccess(validateField(i('0', BoolValidator)));
+  testSuccess(validateField(i('true', BoolValidator)));
+  testSuccess(validateField(i('false', BoolValidator)));
 });
 
 test('EnumValidator', () =>
 {
-  expect(validateField(i('', EnumValidator, e([])))).toStrictEqual([]);
-  expect(validateField(i('', EnumValidator, e(['test'])))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', EnumValidator, e([])))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', EnumValidator, e(['test'])))).toStrictEqual([]);
-  expect(validateField(i('test', EnumValidator, e(['TEST'])))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', EnumValidator, e(['TEST'], false)))).toStrictEqual([]);
-  expect(validateField(i('test', EnumValidator, e(['TEST'], false, true)))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', EnumValidator, e(['TEST'], true, true)))).toStrictEqual([]);
+  testSuccess(validateField(i('', EnumValidator, e([]))));
+  testFailure(validateField(i('', EnumValidator, e(['test']))), ['not a valid value']);
+  testFailure(validateField(i('test', EnumValidator, e([]))), ['not a valid value']);
+  testSuccess(validateField(i('test', EnumValidator, e(['test']))));
+  testFailure(validateField(i('test', EnumValidator, e(['TEST']))), ['not a valid value']);
+  testSuccess(validateField(i('test', EnumValidator, e(['TEST'], false))));
+  testFailure(validateField(i('test', EnumValidator, e(['TEST'], false, true))), ['not a valid value']);
+  testSuccess(validateField(i('test', EnumValidator, e(['TEST'], true, true))));
 });
 
 test('ConstEnumValidator', () =>
 {
-  expect(validateField(i('', ConstEnumValidator, e([])))).toStrictEqual([]);
-  expect(validateField(i('', ConstEnumValidator, e(['test'])))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', ConstEnumValidator, e([])))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', ConstEnumValidator, e(['test'])))).toStrictEqual([]);
-  expect(validateField(i('test', ConstEnumValidator, e(['TEST'])))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', ConstEnumValidator, e(['TEST'], false)))).toStrictEqual([]);
-  expect(validateField(i('test', ConstEnumValidator, e(['TEST'], false, true)))).toStrictEqual(['not a valid value']);
-  expect(validateField(i('test', ConstEnumValidator, e(['TEST'], true, true)))).toStrictEqual([]);
+  testSuccess(validateField(i('', ConstEnumValidator, e([]))));
+  testFailure(validateField(i('', ConstEnumValidator, e(['test']))), ['not a valid value']);
+  testFailure(validateField(i('test', ConstEnumValidator, e([]))), ['not a valid value']);
+  testSuccess(validateField(i('test', ConstEnumValidator, e(['test']))));
+  testFailure(validateField(i('test', ConstEnumValidator, e(['TEST']))), ['not a valid value']);
+  testSuccess(validateField(i('test', ConstEnumValidator, e(['TEST'], false))));
+  testFailure(validateField(i('test', ConstEnumValidator, e(['TEST'], false, true))), ['not a valid value']);
+  testSuccess(validateField(i('test', ConstEnumValidator, e(['TEST'], true, true))));
 });
 
 test('EqualValidator', () =>
 {
-  expect(validateField(i('', EqualValidator, {expect: 'test'}))).toStrictEqual(['value does not match']);
-  expect(validateField(i('test', EqualValidator, {expect: ''}))).toStrictEqual(['value does not match']);
-  expect(validateField(i('test', EqualValidator, {expect: 'test'}))).toStrictEqual([]);
+  testFailure(validateField(i('', EqualValidator, {expect: 'test'})), ['value does not match']);
+  testFailure(validateField(i('test', EqualValidator, {expect: ''})), ['value does not match']);
+  testSuccess(validateField(i('test', EqualValidator, {expect: 'test'})));
 });
 
 test('NotEqualValidator', () =>
 {
-  expect(validateField(i('', NotEqualValidator, {expect: 'test'}))).toStrictEqual([]);
-  expect(validateField(i('test', NotEqualValidator, {expect: ''}))).toStrictEqual([]);
-  expect(validateField(i('test', NotEqualValidator, {expect: 'test'}))).toStrictEqual(['value must not match']);
+  testSuccess(validateField(i('', NotEqualValidator, {expect: 'test'})));
+  testSuccess(validateField(i('test', NotEqualValidator, {expect: ''})));
+  testFailure(validateField(i('test', NotEqualValidator, {expect: 'test'})), ['value must not match']);
 });
 
 test('test form no elements', () =>
@@ -123,6 +127,6 @@ test('test form error elements', () =>
     inputB = i('test', NotEqualValidator, {expect: 'test'});
   const validationResults = validateForm(f(inputA, inputB));
   expect(validationResults.size).toStrictEqual(2);
-  expect(validationResults.get(inputA)).toStrictEqual(['value does not match']);
-  expect(validationResults.get(inputB)).toStrictEqual(['value must not match']);
+  testFailure(validationResults.get(inputA), ['value does not match']);
+  testFailure(validationResults.get(inputB), ['value must not match']);
 });

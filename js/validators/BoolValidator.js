@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {ValidationResponse, Validator} from '../validator';
 
 export class BoolValidator extends Validator
 {
@@ -6,7 +6,7 @@ export class BoolValidator extends Validator
   {
   }
 
-  validate(value, ele, isChanging = false)
+  validate(value, ele)
   {
     if(typeof value !== 'boolean')
     {
@@ -14,17 +14,17 @@ export class BoolValidator extends Validator
       {
         if(!(/true|false|0|1/.test(value.toLowerCase())))
         {
-          return ['Invalid boolean value'];
+          return ValidationResponse.error(ele, ['Invalid boolean value']);
         }
       }
       else if(typeof value === 'number')
       {
         if(value !== 0 && value !== 1)
         {
-          return ['Invalid boolean value'];
+          return ValidationResponse.error(ele, ['Invalid boolean value']);
         }
       }
     }
-    return [];
+    return ValidationResponse.success();
   }
 }

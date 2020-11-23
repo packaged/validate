@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {ValidationResponse, Validator} from '../validator';
 
 export class RequiredValidator extends Validator
 {
@@ -9,19 +9,19 @@ export class RequiredValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele, isChanging = false)
+  validate(value, ele)
   {
     if('checked' in ele)
     {
       if(!ele.checked)
       {
-        return ['required'];
+        return ValidationResponse.error(ele, ['required']);
       }
     }
     else if(value.length <= 0)
     {
-      return ['required'];
+      return ValidationResponse.error(ele, ['required']);
     }
-    return [];
+    return ValidationResponse.success(ele);
   }
 }

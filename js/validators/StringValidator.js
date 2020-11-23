@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {ValidationResponse, Validator} from '../validator';
 
 export class StringValidator extends Validator
 {
@@ -11,23 +11,23 @@ export class StringValidator extends Validator
     this._maxLength = config.maxLength;
   }
 
-  validate(value, ele, isChanging = false)
+  validate(value, ele)
   {
     if(typeof value !== 'string')
     {
-      return ['not a valid value'];
+      return ValidationResponse.error(ele, ['not a valid value']);
     }
 
-    if(this._minLength !== null && value.length < this._minLength && (!isChanging))
+    if(this._minLength !== null && value.length < this._minLength)
     {
-      return ['must be at least ' + this._minLength + ' characters'];
+      return ValidationResponse.potentiallyValid(ele, ['must be at least ' + this._minLength + ' characters']);
     }
 
     if(this._maxLength > 0 && value.length > this._maxLength)
     {
-      return ['must be no more than ' + this._maxLength + ' characters'];
+      return ValidationResponse.error(ele, ['must be no more than ' + this._maxLength + ' characters']);
     }
 
-    return [];
+    return ValidationResponse.success(ele);
   }
 }

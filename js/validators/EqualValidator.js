@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {ValidationResponse, Validator} from '../validator';
 
 export class EqualValidator extends Validator
 {
@@ -9,12 +9,12 @@ export class EqualValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele, isChanging = false)
+  validate(value, ele)
   {
     if(value !== this._expect)
     {
-      return ['value does not match'];
+      return ValidationResponse.error(ele, ['value does not match']);
     }
-    return [];
+    return ValidationResponse.success(ele);
   }
 }

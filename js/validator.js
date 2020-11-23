@@ -26,12 +26,41 @@ export class Validator
   /**
    * @param value
    * @param {HTMLElement} ele
-   * @param {Boolean} isChanging
-   * @return {Array}
+   * @return {ValidationResponse}
+   * @throws
    */
-  validate(value, ele, isChanging = false)
+  validate(value, ele)
   {
     throw 'validate not implemented on ' + this.name;
+  }
+}
+
+export class ValidationResponse
+{
+  element = null;
+  errors = null;
+  potentiallyValid = false;
+
+  constructor(element, errors, potentiallyValid)
+  {
+    this.element = element;
+    this.errors = errors;
+    this.potentiallyValid = potentiallyValid;
+  }
+
+  static success(element)
+  {
+    return new ValidationResponse(element, [], true);
+  }
+
+  static potentiallyValid(element, errors = [])
+  {
+    return new ValidationResponse(element, errors, true);
+  }
+
+  static error(element, errors = [])
+  {
+    return new ValidationResponse(element, errors, false);
   }
 }
 
@@ -45,10 +74,9 @@ export function addValidator(validator)
 
 /**
  * @param {HTMLElement} ele
- * @param {Boolean} isChanging
  * @return {Array}
  */
-export function validateField(ele, isChanging = false)
+export function validateField(ele)
 {
   const errors = [];
   const validateAttr = ele.getAttribute('validate');
@@ -56,7 +84,7 @@ export function validateField(ele, isChanging = false)
   {
     const validator = Validator.fromEncoded(validateAttr);
     const value = 'value' in ele ? ele.value : null;
-    return validator.validate(value, ele, isChanging);
+    return validator.validate(value, ele);
   }
   return errors;
 }
@@ -70,17 +98,18 @@ export function validateForm(form)
   form.querySelectorAll('[validate]').forEach(
     (ele) =>
     {
-      const errors = validateField(ele);
-      if(errors.length)
+      const response = validateField(ele);
+      if(response.errors.length)
       {
-        const eleName = ele.getAttribute('name');
         if(!keyedErrors.has(ele))
         {
-          keyedErrors.set(ele, errors);
+          keyedErrors.set(ele, response);
         }
         else
         {
-          keyedErrors.get(ele).push(...errors);
+          const resp = keyedErrors.get(ele);
+          resp.errors.push(response.errors);
+          resp.potentiallyValid = resp.potentiallyValid && response.potentiallyValid;
         }
       }
     }
