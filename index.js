@@ -6,6 +6,7 @@ import {ConstEnumValidator} from './js/validators/ConstEnumValidator';
 import {BoolValidator} from './js/validators/BoolValidator';
 import {StringValidator} from './js/validators/StringValidator';
 import {RequiredValidator} from './js/validators/RequiredValidator';
+import {MultiValidator} from './js/validators/MultiValidator';
 
 export * from './js/validator';
 
@@ -16,3 +17,4 @@ addValidator(ConstEnumValidator);
 addValidator(BoolValidator);
 addValidator(StringValidator);
 addValidator(RequiredValidator);
+addValidator(MultiValidator);

@@ -45,7 +45,7 @@ export class Validator
 export class ValidationResponse
 {
   element = null;
-  errors = null;
+  errors = [];
   potentiallyValid = false;
 
   constructor(element, errors, potentiallyValid)
@@ -103,21 +103,23 @@ export function validateForm(form)
   form.querySelectorAll('[validate]').forEach(
     (ele) =>
     {
-      const response = validateField(ele);
-      if(response.errors.length)
-      {
-        if(!keyedErrors.has(ele))
-        {
-          keyedErrors.set(ele, response);
-        }
-        else
-        {
-          const resp = keyedErrors.get(ele);
-          resp.errors.push(response.errors);
-          resp.potentiallyValid = resp.potentiallyValid && response.potentiallyValid;
-        }
-      }
+      keyedErrors.set(ele, combineValidationResponse(ele, keyedErrors.get(ele), validateField(ele)));
     }
   );
   return keyedErrors;
+}
+
+export function combineValidationResponse(ele, ...responses)
+{
+  const response = ValidationResponse.success(ele);
+  responses.forEach(
+    r =>
+    {
+      if(r instanceof ValidationResponse)
+      {
+        response.errors.push(...r.errors);
+        response.potentiallyValid = response.potentiallyValid && r.potentiallyValid;
+      }
+    });
+  return response;
 }

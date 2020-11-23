@@ -7,15 +7,20 @@ import {EnumValidator} from './js/validators/EnumValidator';
 import {ConstEnumValidator} from './js/validators/ConstEnumValidator';
 import {BoolValidator} from './js/validators/BoolValidator';
 import {StringValidator} from './js/validators/StringValidator';
+import {MultiValidator} from './js/validators/MultiValidator';
+
+function vo(validateType, validateObject = {})
+{
+  return Object.assign({}, {t: validateType.name, c: validateObject});
+}
 
 function i(value, validateType, validateObject = {}, inputType = 'text', inputName = 'myInput')
 {
-  const ob = Object.assign({}, {t: validateType.name, c: validateObject});
   const input = document.createElement('input');
   input.setAttribute('name', inputName);
   input.setAttribute('type', inputType);
   input.setAttribute('value', value);
-  input.setAttribute('validate', base64.encode(JSON.stringify(ob)));
+  input.setAttribute('validate', base64.encode(JSON.stringify(vo(validateType, validateObject))));
   return input;
 }
 
@@ -131,13 +136,14 @@ test('test form error elements', () =>
   testFailure(validationResults.get(inputB), ['value must not match']);
 });
 
-test('test form multiple errors, potentially valid', () =>
+test('test form multiple errors, impossible', () =>
 {
-
-  const inputA = i('test', EqualValidator, {expect: ''}),
-    inputB = i('test', NotEqualValidator, {expect: 'test'});
-  const validationResults = validateForm(f(inputA, inputB));
-  expect(validationResults.size).toStrictEqual(2);
-  testFailure(validationResults.get(inputA), ['value does not match']);
-  testFailure(validationResults.get(inputB), ['value must not match']);
+  const input = i(
+    'test',
+    MultiValidator,
+    {validators: [vo(StringValidator, {'maxLength': 1}), vo(StringValidator, {'minLength': 5})]}
+  );
+  const validationResults = validateForm(f(input));
+  expect(validationResults.size).toStrictEqual(1);
+  testFailure(validationResults.get(input), ['must be no more than 1 characters', 'must be at least 5 characters']);
 });

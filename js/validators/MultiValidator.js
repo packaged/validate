@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {combineValidationResponse, ValidationResponse, Validator} from '../validator';
 
 export class MultiValidator extends Validator
 {
@@ -11,11 +11,13 @@ export class MultiValidator extends Validator
 
   validate(ele)
   {
+    let response = ValidationResponse.success(ele);
     this._validators.forEach(
-      v =>
+      obj =>
       {
-        const validator = MultiValidator.fromObject(v);
-        validator.validate(ele);
+        const v = Validator.fromObject(obj);
+        response = combineValidationResponse(ele, response, v.validate(ele));
       });
+    return response;
   }
 }
