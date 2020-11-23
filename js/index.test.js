@@ -90,6 +90,13 @@ test('EqualValidator', () =>
   expect(validateField(i('test', 'EqualValidator', {expect: 'test'}))).toBe(true);
 });
 
+test('NotEqualValidator', () =>
+{
+  expect(validateField(i('', 'NotEqualValidator', {expect: 'test'}))).toBe(true);
+  expect(validateField(i('test', 'NotEqualValidator', {expect: ''}))).toBe(true);
+  expect(validateField(i('test', 'NotEqualValidator', {expect: 'test'}))).toBe(false);
+});
+
 test('test no form elements', () =>
 {
   expect(validateForm(f())).toBe(true);
