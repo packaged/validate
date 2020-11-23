@@ -9,9 +9,9 @@ export class NotEqualValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele)
+  validate(ele)
   {
-    if(value === this._expect)
+    if('value' in ele && ele.value === this._expect)
     {
       return ValidationResponse.error(ele, ['value must not match']);
     }

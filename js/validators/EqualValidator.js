@@ -9,8 +9,9 @@ export class EqualValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele)
+  validate(ele)
   {
+    const value = 'value' in ele ? ele.value : null;
     if(value !== this._expect)
     {
       return ValidationResponse.error(ele, ['value does not match']);

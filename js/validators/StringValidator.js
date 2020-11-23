@@ -11,8 +11,9 @@ export class StringValidator extends Validator
     this._maxLength = config.maxLength;
   }
 
-  validate(value, ele)
+  validate(ele)
   {
+    const value = 'value' in ele ? ele.value : null;
     if(typeof value !== 'string')
     {
       return ValidationResponse.error(ele, ['not a valid value']);

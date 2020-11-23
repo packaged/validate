@@ -6,8 +6,9 @@ export class BoolValidator extends Validator
   {
   }
 
-  validate(value, ele)
+  validate(ele)
   {
+    const value = 'value' in ele ? ele.value : null;
     if(typeof value !== 'boolean')
     {
       if(typeof value === 'string')

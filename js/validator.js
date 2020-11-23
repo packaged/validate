@@ -10,26 +10,33 @@ export class Validator
    */
   static fromEncoded(encoded)
   {
-    const decoded = JSON.parse(base64.decode(encoded));
-    if(!_validators.has(decoded.t))
+    return Validator.fromObject(JSON.parse(base64.decode(encoded)));
+  }
+
+  /**
+   * @param {Object} obj
+   * @return {Validator}
+   */
+  static fromObject(obj)
+  {
+    if(!_validators.has(obj.t))
     {
-      throw 'unrecognised type ' + decoded.t;
+      throw 'unrecognised type ' + obj.t;
     }
-    const c = _validators.get(decoded.t);
+    const c = _validators.get(obj.t);
     const validator = new c();
-    validator._configure(decoded.c);
+    validator._configure(obj.c);
     return validator;
   }
 
   _configure(config) { }
 
   /**
-   * @param value
    * @param {HTMLElement} ele
    * @return {ValidationResponse}
    * @throws
    */
-  validate(value, ele)
+  validate(ele)
   {
     throw 'validate not implemented on ' + this.name;
   }
@@ -74,19 +81,17 @@ export function addValidator(validator)
 
 /**
  * @param {HTMLElement} ele
- * @return {Array}
+ * @return {ValidationResponse}
  */
 export function validateField(ele)
 {
-  const errors = [];
   const validateAttr = ele.getAttribute('validate');
   if(validateAttr)
   {
     const validator = Validator.fromEncoded(validateAttr);
-    const value = 'value' in ele ? ele.value : null;
-    return validator.validate(value, ele);
+    return validator.validate(ele);
   }
-  return errors;
+  return ValidationResponse.success(ele);
 }
 
 /**

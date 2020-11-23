@@ -13,8 +13,9 @@ export class EnumValidator extends Validator
     this._caseSensitive = !!config.caseSensitive;
   }
 
-  validate(value, ele)
+  validate(ele)
   {
+    const value = 'value' in ele ? ele.value : null;
     if(this._allowedValues.length)
     {
       const regex = new RegExp(this._allowedValues.join('|'), !!this._caseSensitive ? '' : 'i');

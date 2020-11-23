@@ -130,3 +130,14 @@ test('test form error elements', () =>
   testFailure(validationResults.get(inputA), ['value does not match']);
   testFailure(validationResults.get(inputB), ['value must not match']);
 });
+
+test('test form multiple errors, potentially valid', () =>
+{
+
+  const inputA = i('test', EqualValidator, {expect: ''}),
+    inputB = i('test', NotEqualValidator, {expect: 'test'});
+  const validationResults = validateForm(f(inputA, inputB));
+  expect(validationResults.size).toStrictEqual(2);
+  testFailure(validationResults.get(inputA), ['value does not match']);
+  testFailure(validationResults.get(inputB), ['value must not match']);
+});

@@ -9,7 +9,7 @@ export class RequiredValidator extends Validator
     this._expect = config.expect;
   }
 
-  validate(value, ele)
+  validate(ele)
   {
     if('checked' in ele)
     {
@@ -18,7 +18,7 @@ export class RequiredValidator extends Validator
         return ValidationResponse.error(ele, ['required']);
       }
     }
-    else if(value.length <= 0)
+    else if('value' in ele && ele.value.length <= 0)
     {
       return ValidationResponse.error(ele, ['required']);
     }
