@@ -23,9 +23,11 @@ export function validateField(ele)
   const validateAttr = ele.getAttribute('validate');
   if(validateAttr)
   {
-    const validate = JSON.parse(base64.decode(validateAttr));
+    const validator = JSON.parse(base64.decode(validateAttr));
+    const validatorType = validator.t;
+    const validatorConfig = validator.c;
     const value = 'value' in ele ? ele.value : null;
-    switch(validate.t)
+    switch(validatorType)
     {
       case 'ArrayKeysValidator':
         break;
@@ -38,7 +40,7 @@ export function validateField(ele)
         }
         else if(typeof value === 'string')
         {
-          return /true|false|0|1/.test(ele.value.toLowerCase());
+          return /true|false|0|1/.test(value.toLowerCase());
         }
         else if(typeof value === 'number')
         {
@@ -51,17 +53,17 @@ export function validateField(ele)
         break;
       case 'ConstEnumValidator':
       case 'EnumValidator':
-        if(validate.allowedValues.length)
+        if(validatorConfig.allowedValues.length)
         {
-          const regex = new RegExp(validate.allowedValues.join('|'), !!validate.caseSensitive ? '' : 'i');
-          if(validate.negate ^ !regex.test(value))
+          const regex = new RegExp(validatorConfig.allowedValues.join('|'), !!validatorConfig.caseSensitive ? '' : 'i');
+          if(validatorConfig.negate ^ !regex.test(value))
           {
             return false;
           }
         }
         else
         {
-          if(validate.negate ^ (value !== null && value !== ''))
+          if(validatorConfig.negate ^ (value !== null && value !== ''))
           {
             return false;
           }
@@ -106,11 +108,11 @@ export function validateField(ele)
         {
           return false;
         }
-        if(validate.minLength && ele.value.length < validate.minLength)
+        if(validatorConfig.minLength && ele.value.length < validatorConfig.minLength)
         {
           return false;
         }
-        if(validate.maxLength && ele.value.length > validate.maxLength)
+        if(validatorConfig.maxLength && ele.value.length > validatorConfig.maxLength)
         {
           return false;
         }

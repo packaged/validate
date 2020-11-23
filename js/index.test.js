@@ -3,7 +3,7 @@ import base64 from 'base-64';
 
 function i(value, validateType, validateObject = {}, inputType = 'text')
 {
-  const ob = Object.assign({}, validateObject, {t: validateType});
+  const ob = Object.assign({}, {t: validateType, c: validateObject});
   const input = document.createElement('input');
   input.setAttribute('type', inputType);
   input.setAttribute('value', value);
