@@ -85,9 +85,10 @@ export class ValidationResponse
 }
 
 /**
+ * @param {string} name
  * @param {ValidatorType} validator
  */
-export function addValidator(validator)
+export function addValidator(name, validator)
 {
-  _validatorMap.set(validator.name.substr(0, validator.name.length - 9), validator);
+  _validatorMap.set(validator.name, validator);
 }

@@ -12,13 +12,13 @@ import {EmailValidator} from './js/validators/EmailValidator';
 
 export * from './js/validator';
 
-addValidator(EqualValidator);
-addValidator(NotEqualValidator);
-addValidator(EnumValidator);
-addValidator(ConstEnumValidator);
-addValidator(BoolValidator);
-addValidator(StringValidator);
-addValidator(RequiredValidator);
-addValidator(MultiValidator);
-addValidator(RegexValidator);
-addValidator(EmailValidator);
+addValidator('Equal', EqualValidator);
+addValidator('NotEqual', NotEqualValidator);
+addValidator('Enum', EnumValidator);
+addValidator('ConstEnum', ConstEnumValidator);
+addValidator('Bool', BoolValidator);
+addValidator('String', StringValidator);
+addValidator('Required', RequiredValidator);
+addValidator('Multi', MultiValidator);
+addValidator('Regex', RegexValidator);
+addValidator('Email', EmailValidator);
