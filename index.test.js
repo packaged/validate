@@ -6,6 +6,7 @@ import {EnumValidator} from './js/validators/EnumValidator';
 import {ConstEnumValidator} from './js/validators/ConstEnumValidator';
 import {BoolValidator} from './js/validators/BoolValidator';
 import {StringValidator} from './js/validators/StringValidator';
+import {RequiredValidator} from './js/validators/RequiredValidator';
 
 function testSuccess(response)
 {
@@ -22,7 +23,7 @@ test(
   'deserialize',
   () =>
   {
-    const v = Validator.deserialize({t: 'StringValidator', c: {'minLength': 2, 'maxLength': 5}});
+    let v = Validator.deserialize({t: 'StringValidator', c: {'minLength': 2, 'maxLength': 5}});
     expect(v).toBeInstanceOf(StringValidator);
     expect(v._minLength).toStrictEqual(2);
     expect(v._maxLength).toStrictEqual(5);
@@ -152,5 +153,24 @@ test(
 
     v = new NotEqualValidator('');
     testSuccess(v.validate('test'));
+  }
+);
+
+test(
+  'RequiredValidator',
+  () =>
+  {
+    let v = new RequiredValidator();
+    testSuccess(v.validate(true));
+    testSuccess(v.validate(false));
+    testSuccess(v.validate('true'));
+    testSuccess(v.validate('false'));
+    testSuccess(v.validate('0'));
+    testSuccess(v.validate('1'));
+    testSuccess(v.validate(0));
+    testSuccess(v.validate(1));
+    testFailure(v.validate(''), ['required']);
+    testFailure(v.validate(null), ['required']);
+    testFailure(v.validate(undefined), ['required']);
   }
 );
