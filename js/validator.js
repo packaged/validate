@@ -1,5 +1,9 @@
 import base64 from 'base-64';
 
+/**
+ * @type {Map<String, function(new: Validator)>}
+ * @private
+ */
 const _validators = new Map();
 
 export class Validator
@@ -96,6 +100,7 @@ export function validateField(ele)
 
 /**
  * @param {HTMLFormElement} form
+ * @return {Map<HTMLElement,ValidationResponse>}
  */
 export function validateForm(form)
 {
