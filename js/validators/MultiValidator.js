@@ -1,4 +1,4 @@
-import {combineValidationResponse, ValidationResponse, Validator} from '../validator';
+import {ValidationResponse, Validator} from '../validator';
 
 export class MultiValidator extends Validator
 {
@@ -16,8 +16,9 @@ export class MultiValidator extends Validator
       obj =>
       {
         const v = Validator.fromObject(obj);
-        response = combineValidationResponse(ele, response, v.validate(ele));
-      });
+        response.combine(v.validate(ele));
+      }
+    );
     return response;
   }
 }

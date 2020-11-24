@@ -73,6 +73,23 @@ export class ValidationResponse
   {
     return new ValidationResponse(element, errors, false);
   }
+
+  /**
+   * @param {...ValidationResponse} responses
+   */
+  combine(...responses)
+  {
+    responses.forEach(
+      r =>
+      {
+        if(r instanceof ValidationResponse)
+        {
+          this.errors.push(...r.errors);
+          this.potentiallyValid = this.potentiallyValid && r.potentiallyValid;
+        }
+      }
+    );
+  }
 }
 
 /**
@@ -108,23 +125,8 @@ export function validateForm(form)
   form.querySelectorAll('[validate]').forEach(
     (ele) =>
     {
-      keyedErrors.set(ele, combineValidationResponse(ele, keyedErrors.get(ele), validateField(ele)));
+      keyedErrors.set(ele, validateField(ele));
     }
   );
   return keyedErrors;
-}
-
-export function combineValidationResponse(ele, ...responses)
-{
-  const response = ValidationResponse.success(ele);
-  responses.forEach(
-    r =>
-    {
-      if(r instanceof ValidationResponse)
-      {
-        response.errors.push(...r.errors);
-        response.potentiallyValid = response.potentiallyValid && r.potentiallyValid;
-      }
-    });
-  return response;
 }
