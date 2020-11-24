@@ -1,33 +1,26 @@
-import base64 from 'base-64';
+/**
+ * @typedef {function(new: Validator)} ValidatorType
+ */
 
 /**
- * @type {Map<String, function(new: Validator)>}
+ * @type {Map<String, ValidatorType>}
  * @private
  */
-const _validators = new Map();
+const _validatorMap = new Map();
 
 export class Validator
 {
   /**
-   * @param {string} encoded
-   * @return {Validator}
-   */
-  static fromEncoded(encoded)
-  {
-    return Validator.fromObject(JSON.parse(base64.decode(encoded)));
-  }
-
-  /**
    * @param {Object} obj
    * @return {Validator}
    */
-  static fromObject(obj)
+  static deserialize(obj)
   {
-    if(!_validators.has(obj.t))
+    if(!_validatorMap.has(obj.t))
     {
       throw 'unrecognised type ' + obj.t;
     }
-    const c = _validators.get(obj.t);
+    const c = _validatorMap.get(obj.t);
     const validator = new c();
     validator._configure(obj.c);
     return validator;
@@ -36,11 +29,11 @@ export class Validator
   _configure(config) { }
 
   /**
-   * @param {HTMLElement} ele
+   * @param value
    * @return {ValidationResponse}
    * @throws
    */
-  validate(ele)
+  validate(value)
   {
     throw 'validate not implemented on ' + this.name;
   }
@@ -48,30 +41,28 @@ export class Validator
 
 export class ValidationResponse
 {
-  element = null;
   errors = [];
   potentiallyValid = false;
 
-  constructor(element, errors, potentiallyValid)
+  constructor(errors, potentiallyValid)
   {
-    this.element = element;
     this.errors = errors;
     this.potentiallyValid = potentiallyValid;
   }
 
-  static success(element)
+  static success()
   {
-    return new ValidationResponse(element, [], true);
+    return new ValidationResponse([], true);
   }
 
-  static potentiallyValid(element, errors = [])
+  static potentiallyValid(errors = [])
   {
-    return new ValidationResponse(element, errors, true);
+    return new ValidationResponse(errors, true);
   }
 
-  static error(element, errors = [])
+  static error(errors = [])
   {
-    return new ValidationResponse(element, errors, false);
+    return new ValidationResponse(errors, false);
   }
 
   /**
@@ -93,40 +84,9 @@ export class ValidationResponse
 }
 
 /**
- * @param {ClassDecorator} validator
+ * @param {ValidatorType} validator
  */
 export function addValidator(validator)
 {
-  _validators.set(validator.name, validator);
-}
-
-/**
- * @param {HTMLElement} ele
- * @return {ValidationResponse}
- */
-export function validateField(ele)
-{
-  const validateAttr = ele.getAttribute('validate');
-  if(validateAttr)
-  {
-    const validator = Validator.fromEncoded(validateAttr);
-    return validator.validate(ele);
-  }
-  return ValidationResponse.success(ele);
-}
-
-/**
- * @param {HTMLFormElement} form
- * @return {Map<HTMLElement,ValidationResponse>}
- */
-export function validateForm(form)
-{
-  const keyedErrors = new Map();
-  form.querySelectorAll('[validate]').forEach(
-    (ele) =>
-    {
-      keyedErrors.set(ele, validateField(ele));
-    }
-  );
-  return keyedErrors;
+  _validatorMap.set(validator.name, validator);
 }

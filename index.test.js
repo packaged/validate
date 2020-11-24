@@ -1,39 +1,11 @@
 import './index';
-import {validateField, validateForm} from './js/validator';
-import base64 from 'base-64';
+import {Validator} from './js/validator';
 import {EqualValidator} from './js/validators/EqualValidator';
 import {NotEqualValidator} from './js/validators/NotEqualValidator';
 import {EnumValidator} from './js/validators/EnumValidator';
 import {ConstEnumValidator} from './js/validators/ConstEnumValidator';
 import {BoolValidator} from './js/validators/BoolValidator';
 import {StringValidator} from './js/validators/StringValidator';
-import {MultiValidator} from './js/validators/MultiValidator';
-
-function vo(validateType, validateObject = {})
-{
-  return Object.assign({}, {t: validateType.name, c: validateObject});
-}
-
-function i(value, validateType, validateObject = {}, inputType = 'text', inputName = 'myInput')
-{
-  const input = document.createElement('input');
-  input.setAttribute('name', inputName);
-  input.setAttribute('type', inputType);
-  input.setAttribute('value', value);
-  input.setAttribute('validate', base64.encode(JSON.stringify(vo(validateType, validateObject))));
-  return input;
-}
-
-/**
- * @param {HTMLInputElement} inputs
- * @return {HTMLFormElement}
- */
-function f(...inputs)
-{
-  const form = document.createElement('form');
-  form.append(...inputs);
-  return form;
-}
 
 function e(allowedValues, caseSensitive = true, negate = false)
 {
@@ -51,99 +23,118 @@ function testFailure(response, errors, potentiallyValid = false)
   expect(response).toHaveProperty('potentiallyValid', potentiallyValid);
 }
 
+test('deserialize', () =>
+{
+  const v = Validator.deserialize({t: 'StringValidator', c: {'minLength': 2, 'maxLength': 5}});
+  expect(v).toBeInstanceOf(StringValidator);
+  expect(v._minLength).toStrictEqual(2);
+  expect(v._maxLength).toStrictEqual(5);
+});
+
 test('StringValidator', () =>
 {
-  testSuccess(validateField(i('test', StringValidator)));
-  testSuccess(validateField(i('', StringValidator)));
+  let v = new StringValidator();
+  testSuccess(v.validate('test'));
+  testSuccess(v.validate(''));
 
-  testFailure(validateField(i('test', StringValidator, {'minLength': 6})), ['must be at least 6 characters'], true);
-  testSuccess(validateField(i('test', StringValidator, {'minLength': 1})));
-  testFailure(validateField(i('', StringValidator, {'minLength': 1})), ['must be at least 1 characters'], true);
+  v = new StringValidator(6);
+  testFailure(v.validate('test'), ['must be at least 6 characters'], true);
 
-  testFailure(validateField(i('test', StringValidator, {'maxLength': 1})), ['must be no more than 1 characters']);
-  testSuccess(validateField(i('t', StringValidator, {'maxLength': 1})));
-  testSuccess(validateField(i('', StringValidator, {'maxLength': 1})));
+  v = new StringValidator(1);
+  testSuccess(v.validate('test'));
+  testFailure(v.validate(''), ['must be at least 1 characters'], true);
 
-  testSuccess(validateField(i('test', StringValidator, {'minLength': 3, 'maxLength': 5})));
-  testSuccess(validateField(i('test', StringValidator, {'minLength': 4, 'maxLength': 4})));
+  v = new StringValidator(0, 1);
+  testFailure(v.validate('test'), ['must be no more than 1 characters']);
+  testSuccess(v.validate('t'));
+  testSuccess(v.validate(''));
 
-  // these get cast as strings 'true' and 'false'
-  testSuccess(validateField(i(true, StringValidator, {'minLength': 4, 'maxLength': 4})));
-  testSuccess(validateField(i(false, StringValidator, {'minLength': 5, 'maxLength': 5})));
+  v = new StringValidator(3, 5);
+  testSuccess(v.validate('test'));
+  v = new StringValidator(4, 4);
+  testSuccess(v.validate('test'));
+
+  v = new StringValidator();
+  testFailure(v.validate(true), ['not a valid value']);
+  testFailure(v.validate(false), ['not a valid value']);
 });
 
 test('BoolValidator', () =>
 {
-  testFailure(validateField(i('test', BoolValidator)), ['Invalid boolean value']);
-  testFailure(validateField(i('', BoolValidator)), ['Invalid boolean value']);
+  const v = new BoolValidator();
+  testFailure(v.validate('test'), ['Invalid boolean value']);
+  testFailure(v.validate(''), ['Invalid boolean value']);
 
-  testSuccess(validateField(i('1', BoolValidator)));
-  testSuccess(validateField(i('0', BoolValidator)));
-  testSuccess(validateField(i('true', BoolValidator)));
-  testSuccess(validateField(i('false', BoolValidator)));
+  testSuccess(v.validate('1'));
+  testSuccess(v.validate('0'));
+  testSuccess(v.validate('true'));
+  testSuccess(v.validate('false'));
 });
 
 test('EnumValidator', () =>
 {
-  testSuccess(validateField(i('', EnumValidator, e([]))));
-  testFailure(validateField(i('', EnumValidator, e(['test']))), ['not a valid value']);
-  testFailure(validateField(i('test', EnumValidator, e([]))), ['not a valid value']);
-  testSuccess(validateField(i('test', EnumValidator, e(['test']))));
-  testFailure(validateField(i('test', EnumValidator, e(['TEST']))), ['not a valid value']);
-  testSuccess(validateField(i('test', EnumValidator, e(['TEST'], false))));
-  testFailure(validateField(i('test', EnumValidator, e(['TEST'], false, true))), ['not a valid value']);
-  testSuccess(validateField(i('test', EnumValidator, e(['TEST'], true, true))));
+  let v = new EnumValidator();
+  testSuccess(v.validate(''));
+  testFailure(v.validate('test'), ['not a valid value']);
+
+  v = new EnumValidator(['test']);
+  testFailure(v.validate(''), ['not a valid value']);
+  testSuccess(v.validate('test'));
+  testSuccess(v.validate('TEST'));
+
+  v = new EnumValidator(['TEST'], true);
+  testFailure(v.validate('test'), ['not a valid value']);
+
+  v = new EnumValidator(['TEST'], false);
+  testSuccess(v.validate('test'));
+
+  v = new EnumValidator(['TEST'], false, true);
+  testFailure(v.validate('test'), ['not a valid value']);
+
+  v = new EnumValidator(['TEST'], true, true);
+  testSuccess(v.validate('test'));
 });
 
 test('ConstEnumValidator', () =>
 {
-  testSuccess(validateField(i('', ConstEnumValidator, e([]))));
-  testFailure(validateField(i('', ConstEnumValidator, e(['test']))), ['not a valid value']);
-  testFailure(validateField(i('test', ConstEnumValidator, e([]))), ['not a valid value']);
-  testSuccess(validateField(i('test', ConstEnumValidator, e(['test']))));
-  testFailure(validateField(i('test', ConstEnumValidator, e(['TEST']))), ['not a valid value']);
-  testSuccess(validateField(i('test', ConstEnumValidator, e(['TEST'], false))));
-  testFailure(validateField(i('test', ConstEnumValidator, e(['TEST'], false, true))), ['not a valid value']);
-  testSuccess(validateField(i('test', ConstEnumValidator, e(['TEST'], true, true))));
+  let v = new ConstEnumValidator();
+  testSuccess(v.validate(''));
+  testFailure(v.validate('test'), ['not a valid value']);
+
+  v = new ConstEnumValidator(['test']);
+  testFailure(v.validate(''), ['not a valid value']);
+  testSuccess(v.validate('test'));
+  testSuccess(v.validate('TEST'));
+
+  v = new ConstEnumValidator(['TEST'], true);
+  testFailure(v.validate('test'), ['not a valid value']);
+
+  v = new ConstEnumValidator(['TEST'], false);
+  testSuccess(v.validate('test'));
+
+  v = new ConstEnumValidator(['TEST'], false, true);
+  testFailure(v.validate('test'), ['not a valid value']);
+
+  v = new ConstEnumValidator(['TEST'], true, true);
+  testSuccess(v.validate('test'));
 });
 
 test('EqualValidator', () =>
 {
-  testFailure(validateField(i('', EqualValidator, {expect: 'test'})), ['value does not match']);
-  testFailure(validateField(i('test', EqualValidator, {expect: ''})), ['value does not match']);
-  testSuccess(validateField(i('test', EqualValidator, {expect: 'test'})));
+  let v = new EqualValidator('test');
+  testFailure(v.validate(''), ['value does not match']);
+  testSuccess(v.validate('test'));
+
+  v = new EqualValidator('');
+  testFailure(v.validate('test'), ['value does not match']);
 });
 
 test('NotEqualValidator', () =>
 {
-  testSuccess(validateField(i('', NotEqualValidator, {expect: 'test'})));
-  testSuccess(validateField(i('test', NotEqualValidator, {expect: ''})));
-  testFailure(validateField(i('test', NotEqualValidator, {expect: 'test'})), ['value must not match']);
-});
+  let v = new NotEqualValidator('test');
+  testFailure(v.validate('test'), ['value must not match']);
+  testSuccess(v.validate(''));
 
-test('test form no elements', () =>
-{
-  expect(validateForm(f()).size).toStrictEqual(0);
-});
-
-test('test form error elements', () =>
-{
-  const inputA = i('test', EqualValidator, {expect: ''}),
-    inputB = i('test', NotEqualValidator, {expect: 'test'});
-  const validationResults = validateForm(f(inputA, inputB));
-  expect(validationResults.size).toStrictEqual(2);
-  testFailure(validationResults.get(inputA), ['value does not match']);
-  testFailure(validationResults.get(inputB), ['value must not match']);
-});
-
-test('test form multiple errors, impossible', () =>
-{
-  const input = i(
-    'test',
-    MultiValidator,
-    {validators: [vo(StringValidator, {'maxLength': 1}), vo(StringValidator, {'minLength': 5})]}
-  );
-  const validationResults = validateForm(f(input));
-  expect(validationResults.size).toStrictEqual(1);
-  testFailure(validationResults.get(input), ['must be no more than 1 characters', 'must be at least 5 characters']);
+  v = new NotEqualValidator('');
+  testSuccess(v.validate('test'));
 });

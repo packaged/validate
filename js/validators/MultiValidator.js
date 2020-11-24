@@ -9,14 +9,14 @@ export class MultiValidator extends Validator
     this._validators = config.validators;
   }
 
-  validate(ele)
+  validate(value)
   {
-    let response = ValidationResponse.success(ele);
+    let response = ValidationResponse.success();
     this._validators.forEach(
       obj =>
       {
         const v = Validator.fromObject(obj);
-        response.combine(v.validate(ele));
+        response.combine(v.validate(value));
       }
     );
     return response;

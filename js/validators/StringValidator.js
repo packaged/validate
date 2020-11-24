@@ -5,30 +5,36 @@ export class StringValidator extends Validator
   _minLength = null;
   _maxLength = null;
 
+  constructor(minLength = 0, maxLength = 0)
+  {
+    super();
+    this._minLength = minLength;
+    this._maxLength = maxLength;
+  }
+
   _configure(config)
   {
     this._minLength = config.minLength;
     this._maxLength = config.maxLength;
   }
 
-  validate(ele)
+  validate(value)
   {
-    const value = 'value' in ele ? ele.value : null;
     if(typeof value !== 'string')
     {
-      return ValidationResponse.error(ele, ['not a valid value']);
+      return ValidationResponse.error(['not a valid value']);
     }
 
-    if(this._minLength !== null && value.length < this._minLength)
+    if(this._minLength > 0 && value.length < this._minLength)
     {
-      return ValidationResponse.potentiallyValid(ele, ['must be at least ' + this._minLength + ' characters']);
+      return ValidationResponse.potentiallyValid(['must be at least ' + this._minLength + ' characters']);
     }
 
     if(this._maxLength > 0 && value.length > this._maxLength)
     {
-      return ValidationResponse.error(ele, ['must be no more than ' + this._maxLength + ' characters']);
+      return ValidationResponse.error(['must be no more than ' + this._maxLength + ' characters']);
     }
 
-    return ValidationResponse.success(ele);
+    return ValidationResponse.success();
   }
 }

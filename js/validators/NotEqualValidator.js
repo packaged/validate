@@ -4,17 +4,23 @@ export class NotEqualValidator extends Validator
 {
   _expect = null;
 
+  constructor(expect)
+  {
+    super();
+    this._expect = expect;
+  }
+
   _configure(config)
   {
     this._expect = config.expect;
   }
 
-  validate(ele)
+  validate(value)
   {
-    if('value' in ele && ele.value === this._expect)
+    if(value === this._expect)
     {
-      return ValidationResponse.error(ele, ['value must not match']);
+      return ValidationResponse.error(['value must not match']);
     }
-    return ValidationResponse.success(ele);
+    return ValidationResponse.success();
   }
 }
