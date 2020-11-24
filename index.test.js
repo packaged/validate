@@ -7,6 +7,7 @@ import {ConstEnumValidator} from './js/validators/ConstEnumValidator';
 import {BoolValidator} from './js/validators/BoolValidator';
 import {StringValidator} from './js/validators/StringValidator';
 import {RequiredValidator} from './js/validators/RequiredValidator';
+import {EmailValidator} from './js/validators/EmailValidator';
 
 function testSuccess(response)
 {
@@ -172,5 +173,18 @@ test(
     testFailure(v.validate(''), ['required']);
     testFailure(v.validate(null), ['required']);
     testFailure(v.validate(undefined), ['required']);
+  }
+);
+
+test(
+  'EmailValidator',
+  () =>
+  {
+    let v = new EmailValidator();
+    testSuccess(v.validate('test@test.com'));
+    testSuccess(v.validate('a@b.com'));
+
+    testFailure(v.validate('test'), ['invalid email address']);
+    testFailure(v.validate('a@b.c'), ['invalid email address']);
   }
 );

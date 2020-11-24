@@ -19,8 +19,18 @@ export class RegexValidator extends Validator
 
   validate(value)
   {
-    const parts = /\/(.*)\/(.*)/.exec(this._pattern);
-    const regex = new RegExp(parts[1], parts[2]);
+    let regex = this._pattern;
+    if(typeof regex === 'string')
+    {
+      const parts = /\/(.*)\/(.*)/.exec(regex);
+      regex = new RegExp(parts[1], parts[2]);
+    }
+
+    if(!(regex instanceof RegExp))
+    {
+      return ValidationResponse.error(['not a valid regular expression']);
+    }
+
     if(!regex.test(value))
     {
       return ValidationResponse.error([this._message]);
