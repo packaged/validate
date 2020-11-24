@@ -90,5 +90,5 @@ export class ValidationResponse
  */
 export function addValidator(name, validator)
 {
-  _validatorMap.set(validator.name, validator);
+  _validatorMap.set(name, validator);
 }
