@@ -23,7 +23,7 @@ test(
   'deserialize',
   () =>
   {
-    let v = Validator.deserialize({t: 'String', c: {'minLength': 2, 'maxLength': 5}});
+    let v = Validator.fromJsonObject({t: 'String', c: {'minLength': 2, 'maxLength': 5}});
     expect(v).toBeInstanceOf(StringValidator);
     expect(v._minLength).toStrictEqual(2);
     expect(v._maxLength).toStrictEqual(5);

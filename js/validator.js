@@ -1,5 +1,5 @@
 /**
- * @typedef {function(new: Validator)} ValidatorType
+ * @typedef {function(new: Validator), deserialize} ValidatorType
  */
 
 /**
@@ -14,19 +14,20 @@ export class Validator
    * @param {Object} obj
    * @return {Validator}
    */
-  static deserialize(obj)
+  static fromJsonObject(obj)
   {
     if(!_validatorMap.has(obj.t))
     {
       throw 'unrecognised type ' + obj.t;
     }
     const c = _validatorMap.get(obj.t);
-    const validator = new c();
-    validator._configure(obj.c);
-    return validator;
+    return c.deserialize(obj.c);
   }
 
-  _configure(config) { }
+  static deserialize(config)
+  {
+    return new this();
+  }
 
   /**
    * @param value
@@ -35,7 +36,7 @@ export class Validator
    */
   validate(value)
   {
-    throw 'validate not implemented on ' + this.name;
+    throw 'validate not implemented on ' + this.constructor.name;
   }
 }
 

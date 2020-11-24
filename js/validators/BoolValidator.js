@@ -2,10 +2,6 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class BoolValidator extends Validator
 {
-  _configure(config)
-  {
-  }
-
   validate(value)
   {
     if(typeof value !== 'boolean')

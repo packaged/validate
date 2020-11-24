@@ -4,9 +4,15 @@ export class MultiValidator extends Validator
 {
   _validators = [];
 
-  _configure(config)
+  constructor(validators)
   {
-    this._validators = config.validators;
+    super();
+    this._validators = validators;
+  }
+
+  static deserialize(config)
+  {
+    return new this(config.validators);
   }
 
   validate(value)

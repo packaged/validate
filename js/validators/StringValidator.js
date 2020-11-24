@@ -12,10 +12,9 @@ export class StringValidator extends Validator
     this._maxLength = maxLength;
   }
 
-  _configure(config)
+  static deserialize(config)
   {
-    this._minLength = config.minLength;
-    this._maxLength = config.maxLength;
+    return new this(config.minLength, config.maxLength);
   }
 
   validate(value)

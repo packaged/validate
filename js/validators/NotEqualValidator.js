@@ -10,9 +10,9 @@ export class NotEqualValidator extends Validator
     this._expect = expect;
   }
 
-  _configure(config)
+  static deserialize(config)
   {
-    this._expect = config.expect;
+    return new this(config.expect);
   }
 
   validate(value)

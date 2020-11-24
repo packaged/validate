@@ -14,11 +14,9 @@ export class EnumValidator extends Validator
     this._negate = negate;
   }
 
-  _configure(config)
+  static deserialize(config)
   {
-    this._allowedValues = config.allowedValues || [];
-    this._caseSensitive = !!config.caseSensitive;
-    this._negate = !!config.negate;
+    return new this(config.allowedValues || [], !!config.caseSensitive, !!config.negate);
   }
 
   validate(value)
