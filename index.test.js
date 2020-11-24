@@ -74,6 +74,11 @@ test(
     testSuccess(v.validate('0'));
     testSuccess(v.validate('true'));
     testSuccess(v.validate('false'));
+    testSuccess(v.validate(true));
+    testSuccess(v.validate(false));
+
+    testFailure(v.validate(null), ['Invalid boolean value']);
+    testFailure(v.validate(undefined), ['Invalid boolean value']);
   }
 );
 

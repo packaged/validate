@@ -4,6 +4,11 @@ export class BoolValidator extends Validator
 {
   validate(value)
   {
+    if(value === null || value === undefined)
+    {
+      return ValidationResponse.error(['Invalid boolean value']);
+    }
+
     if(typeof value !== 'boolean')
     {
       if(typeof value === 'string')
@@ -21,6 +26,7 @@ export class BoolValidator extends Validator
         }
       }
     }
+
     return ValidationResponse.success();
   }
 }
