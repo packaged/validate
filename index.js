@@ -9,6 +9,7 @@ import {RequiredValidator} from './js/validators/RequiredValidator';
 import {MultiValidator} from './js/validators/MultiValidator';
 import {RegexValidator} from './js/validators/RegexValidator';
 import {EmailValidator} from './js/validators/EmailValidator';
+import {IPv4Validator} from './js/validators/IPv4Validator';
 
 export * from './js/validator';
 
@@ -22,3 +23,4 @@ addValidator('Required', RequiredValidator);
 addValidator('Multi', MultiValidator);
 addValidator('Regex', RegexValidator);
 addValidator('Email', EmailValidator);
+addValidator('IPv4', IPv4Validator);

@@ -8,6 +8,7 @@ import {BoolValidator} from './js/validators/BoolValidator';
 import {StringValidator} from './js/validators/StringValidator';
 import {RequiredValidator} from './js/validators/RequiredValidator';
 import {EmailValidator} from './js/validators/EmailValidator';
+import {IPv4Validator} from './js/validators/IPv4Validator';
 
 function testSuccess(response)
 {
@@ -191,5 +192,25 @@ test(
 
     testFailure(v.validate('test'), ['invalid email address']);
     testFailure(v.validate('a@b.c'), ['invalid email address']);
+  }
+);
+
+test(
+  'IPv4Validator',
+  () =>
+  {
+    let v = new IPv4Validator();
+    testSuccess(v.validate('0.0.0.0'));
+    testSuccess(v.validate('255.255.255.255'));
+    testSuccess(v.validate('127.0.0.1'));
+
+    testFailure(v.validate(''), ['invalid IPv4 address']);
+    testFailure(v.validate('test'), ['invalid IPv4 address']);
+    testFailure(v.validate('a.b.c.d'), ['invalid IPv4 address']);
+    testFailure(v.validate('256.255.255.255'), ['invalid IPv4 address']);
+    testFailure(v.validate('255.256.255.255'), ['invalid IPv4 address']);
+    testFailure(v.validate('255.255.256.255'), ['invalid IPv4 address']);
+    testFailure(v.validate('255.255.255.256'), ['invalid IPv4 address']);
+    testFailure(v.validate('256.256.256.256'), ['invalid IPv4 address']);
   }
 );
