@@ -2,8 +2,9 @@
 namespace Packaged\Validate;
 
 use Generator;
+use JsonSerializable;
 
-abstract class AbstractValidator implements IValidator, \JsonSerializable
+abstract class AbstractValidator implements IValidator, JsonSerializable
 {
   protected function _makeError(string $message): ValidationException
   {
@@ -56,7 +57,6 @@ abstract class AbstractValidator implements IValidator, \JsonSerializable
   public function isValid($value): bool
   {
     $gen = $this->_doValidate($value);
-    /** @noinspection PhpUnusedLocalVariableInspection */
     foreach($gen as $error)
     {
       if($error)
@@ -76,5 +76,4 @@ abstract class AbstractValidator implements IValidator, \JsonSerializable
   {
     return [];
   }
-
 }

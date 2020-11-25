@@ -43,6 +43,7 @@ class NumericValidatorTest extends TestCase
     $this->assertFalse($validator->isValid(5.533));
     $this->assertFalse($validator->isValid(5.5333));
     $this->assertTrue($validator->isValid(5.5));
+    $this->assertFalse($validator->isValid('5.5.5'));
 
     $this->assertNotEmpty($validator->validate('nan'));
   }
