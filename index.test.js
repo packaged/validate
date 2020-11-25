@@ -264,7 +264,9 @@ test(
     testSuccess(v.validate(100));
     testSuccess(v.validate('100'));
     testSuccess(v.validate(100.000));
-    testFailure(v.validate('100.000'), ['must be an integer']);
+    testFailure(v.validate(100.001), ['must be an integer']);
+    testFailure(v.validate('100.001'), ['must be an integer']);
+    testFailure(v.validate('100.001.001'), ['must be an integer']);
     testFailure(v.validate(100000), ['must be less than 150']);
     testFailure(v.validate('100000'), ['must be less than 150']);
   }
@@ -280,8 +282,9 @@ test(
     testSuccess(v.validate('1'));
     testSuccess(v.validate(100));
     testSuccess(v.validate('100'));
-    testSuccess(v.validate(100.000));
-    testSuccess(v.validate('100.000'));
+    testSuccess(v.validate(100.001));
+    testSuccess(v.validate('100.001'));
+    testFailure(v.validate('100.001.001'), ['invalid decimal value']);
     testSuccess(v.validate(100000));
     testSuccess(v.validate('100000'));
 
@@ -295,6 +298,7 @@ test(
     testSuccess(v.validate('100.01'));
     testFailure(v.validate(100.001), ['must be a number to no more than 2 decimal places']);
     testFailure(v.validate('100.001'), ['must be a number to no more than 2 decimal places']);
+    testFailure(v.validate('100.001.001'), ['invalid decimal value']);
     testFailure(v.validate(100000), ['must be less than 150']);
     testFailure(v.validate('100000'), ['must be less than 150']);
   }
