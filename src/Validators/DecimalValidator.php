@@ -49,9 +49,11 @@ class DecimalValidator extends NumberValidator
     if($passParent)
     {
       $parts = explode('.', $value);
-      if((count($parts) > 2)
-        || ((count($parts) == 2) && (strlen($parts[1]) > $this->_decimalPlaces))
-      )
+      if(count($parts) > 2)
+      {
+        yield $this->_makeError('invalid decimal value');
+      }
+      else if(count($parts) == 2 && ($this->_decimalPlaces !== null && strlen($parts[1]) > $this->_decimalPlaces))
       {
         yield $this->_makeError('must be a number to no more than ' . $this->_decimalPlaces . ' decimal places');
       }
