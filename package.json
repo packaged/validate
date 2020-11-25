@@ -1,6 +1,6 @@
 {
   "name": "@packaged/validate",
-  "version": "0.0.1",
+  "version": "2.7.0",
   "main": "index.js",
   "repository": "git@github.com:packaged/validate",
   "author": "Tom Kay <oridan82@gmail.com>",
