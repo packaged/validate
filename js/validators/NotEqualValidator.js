@@ -2,8 +2,6 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class NotEqualValidator extends Validator
 {
-  _expect = null;
-
   constructor(expect)
   {
     super();
