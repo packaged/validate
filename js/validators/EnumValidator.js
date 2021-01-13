@@ -2,10 +2,6 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class EnumValidator extends Validator
 {
-  _allowedValues = [];
-  _negate = false;
-  _caseSensitive = true;
-
   constructor(allowedValues = [], caseSensitive = false, negate = false)
   {
     super();
