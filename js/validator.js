@@ -42,13 +42,20 @@ export class Validator
 
 export class ValidationResponse
 {
-  errors = [];
-  potentiallyValid = false;
-
   constructor(errors, potentiallyValid)
   {
-    this.errors = errors;
-    this.potentiallyValid = potentiallyValid;
+    this._errors = errors || [];
+    this._potentiallyValid = potentiallyValid || false;
+  }
+
+  get errors()
+  {
+    return this._errors;
+  }
+
+  get potentiallyValid()
+  {
+    return this._potentiallyValid;
   }
 
   static success()
@@ -76,8 +83,8 @@ export class ValidationResponse
       {
         if(r instanceof ValidationResponse)
         {
-          this.errors.push(...r.errors);
-          this.potentiallyValid = this.potentiallyValid && r.potentiallyValid;
+          this._errors.push(...r._errors);
+          this._potentiallyValid = this._potentiallyValid && r._potentiallyValid;
         }
       }
     );
