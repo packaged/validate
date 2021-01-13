@@ -2,12 +2,10 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class MultiValidator extends Validator
 {
-  _validators = [];
-
   constructor(validators)
   {
     super();
-    this._validators = validators;
+    this._validators = validators || [];
   }
 
   static deserialize(config)

@@ -2,9 +2,6 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class NumberValidator extends Validator
 {
-  _minValue = null;
-  _maxValue = null;
-
   constructor(minValue = null, maxValue = null)
   {
     super();

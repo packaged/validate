@@ -2,9 +2,6 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class StringValidator extends Validator
 {
-  _minLength = null;
-  _maxLength = null;
-
   constructor(minLength = 0, maxLength = 0)
   {
     super();

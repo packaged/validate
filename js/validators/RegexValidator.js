@@ -2,9 +2,6 @@ import {ValidationResponse, Validator} from '../validator';
 
 export class RegexValidator extends Validator
 {
-  _pattern = null;
-  _message = null;
-
   constructor(pattern, message = 'does not match regular expression')
   {
     super();

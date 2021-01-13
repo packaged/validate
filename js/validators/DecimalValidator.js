@@ -3,8 +3,6 @@ import {NumberValidator} from './NumberValidator';
 
 export class DecimalValidator extends NumberValidator
 {
-  _decimalPlaces = null;
-
   constructor(decimalPlaces = null, minValue = null, maxValue = null)
   {
     super();

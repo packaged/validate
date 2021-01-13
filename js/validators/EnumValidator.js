@@ -9,9 +9,9 @@ export class EnumValidator extends Validator
   constructor(allowedValues = [], caseSensitive = false, negate = false)
   {
     super();
-    this._allowedValues = allowedValues;
-    this._caseSensitive = caseSensitive;
-    this._negate = negate;
+    this._allowedValues = allowedValues || [];
+    this._caseSensitive = !!caseSensitive;
+    this._negate = !!negate;
   }
 
   static deserialize(config)
