@@ -19,7 +19,7 @@ class RequiredValidator extends AbstractSerializableValidator
 
   protected function _doValidate($value): Generator
   {
-    if($value === null || $value === '')
+    if($value === null || $value === '' || $value === false)
     {
       yield $this->_makeError('required');
     }

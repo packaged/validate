@@ -13,7 +13,8 @@ class RequiredValidatorTest extends TestCase
     $this->assertFalse($validator->isValid(''));
     $this->assertTrue($validator->isValid('test'));
     $this->assertTrue($validator->isValid(0));
-    $this->assertTrue($validator->isValid(false));
+    $this->assertFalse($validator->isValid(false));
+    $this->assertTrue($validator->isValid('false'));
     $this->assertTrue($validator->isValid(true));
   }
 }
