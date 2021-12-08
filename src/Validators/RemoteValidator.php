@@ -3,6 +3,7 @@ namespace Packaged\Validate\Validators;
 
 use Generator;
 use Packaged\Validate\AbstractSerializableValidator;
+use Packaged\Validate\DatasetValidatorTrait;
 use Packaged\Validate\IDataSetValidator;
 use Packaged\Validate\IValidator;
 use Packaged\Validate\SerializableValidator;
@@ -11,6 +12,8 @@ use stdClass;
 
 class RemoteValidator extends AbstractSerializableValidator implements IDataSetValidator
 {
+  use DatasetValidatorTrait;
+
   protected $_validators;
   protected $_field;
 
@@ -39,17 +42,14 @@ class RemoteValidator extends AbstractSerializableValidator implements IDataSetV
     ];
   }
 
-  protected function _doValidate($values): Generator
+  protected function _doValidate($value): Generator
   {
-    if(!is_array($values))
-    {
-      return $this->_makeError('not a valid value for a dataset validator');
-    }
+    $data = $this->getData();
 
     $secondary = [];
     foreach($this->_validators as $validator)
     {
-      if($validator->remoteValidator->isValid($values[$validator->remoteField] ?? null))
+      if($validator->remoteValidator->isValid($data[$validator->remoteField] ?? null))
       {
         if(!isset($secondary[$this->_field]))
         {
@@ -59,13 +59,17 @@ class RemoteValidator extends AbstractSerializableValidator implements IDataSetV
       }
     }
 
-    $fieldValue = $values[$this->_field] ?? null;
-    foreach($secondary as $field => $validators)
+    foreach($secondary as $validators)
     {
       foreach($validators as $validator)
       {
         /** @var IValidator $validator */
-        foreach($validator->validate($fieldValue) as $error)
+        if($validator instanceof IDataSetValidator)
+        {
+          $validator->setData($this->getData());
+        }
+
+        foreach($validator->validate($value) as $error)
         {
           yield $error;
         }
