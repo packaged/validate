@@ -12,6 +12,7 @@ import {IPv4Validator} from './js/validators/IPv4Validator';
 import {NumberValidator} from './js/validators/NumberValidator';
 import {IntegerValidator} from './js/validators/IntegerValidator';
 import {DecimalValidator} from './js/validators/DecimalValidator';
+import {ConfirmationValidator} from './js/validators/ConfirmationValidator.js';
 
 function testSuccess(response)
 {
@@ -301,5 +302,25 @@ test(
     testFailure(v.validate('100.001.001'), ['invalid decimal value']);
     testFailure(v.validate(100000), ['must be less than 150']);
     testFailure(v.validate('100000'), ['must be less than 150']);
+  }
+);
+
+test(
+  'ConfirmationValidator',
+  () =>
+  {
+    let v = new ConfirmationValidator('field2');
+    v.setData({'field1': 10});
+    testFailure(v.validate(v.getData()['field1']), ['value does not match']);
+    v.setData({'field2': ''});
+    testFailure(v.validate(v.getData()['field1']), ['value does not match']);
+    v.setData({'field1': 'yes', 'field2': 'no'});
+    testFailure(v.validate(v.getData()['field1']), ['value does not match']);
+    v.setData({'field1': 'no', 'field2': 'yes'});
+    testFailure(v.validate(v.getData()['field1']), ['value does not match']);
+    v.setData({'field1': 'test', 'field2': 'test'});
+    testSuccess(v.validate(v.getData()['field1']));
+    v.setData({'field1': 123, 'field2': 123});
+    testSuccess(v.validate(v.getData()['field1']));
   }
 );

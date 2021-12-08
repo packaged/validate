@@ -40,6 +40,21 @@ export class Validator
   }
 }
 
+export class DataSetValidator extends Validator
+{
+  _data = {};
+
+  setData(data)
+  {
+    this._data = data;
+  }
+
+  getData()
+  {
+    return this._data;
+  }
+}
+
 export class ValidationResponse
 {
   constructor(errors, potentiallyValid)

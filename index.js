@@ -1,15 +1,16 @@
-import {addValidator} from './js/validator';
-import {EqualValidator} from './js/validators/EqualValidator';
-import {NotEqualValidator} from './js/validators/NotEqualValidator';
-import {EnumValidator} from './js/validators/EnumValidator';
-import {ConstEnumValidator} from './js/validators/ConstEnumValidator';
-import {BoolValidator} from './js/validators/BoolValidator';
-import {StringValidator} from './js/validators/StringValidator';
-import {RequiredValidator} from './js/validators/RequiredValidator';
-import {MultiValidator} from './js/validators/MultiValidator';
-import {RegexValidator} from './js/validators/RegexValidator';
-import {EmailValidator} from './js/validators/EmailValidator';
-import {IPv4Validator} from './js/validators/IPv4Validator';
+import {addValidator} from './js/validator.js';
+import {EqualValidator} from './js/validators/EqualValidator.js';
+import {NotEqualValidator} from './js/validators/NotEqualValidator.js';
+import {EnumValidator} from './js/validators/EnumValidator.js';
+import {ConstEnumValidator} from './js/validators/ConstEnumValidator.js';
+import {BoolValidator} from './js/validators/BoolValidator.js';
+import {StringValidator} from './js/validators/StringValidator.js';
+import {RequiredValidator} from './js/validators/RequiredValidator.js';
+import {MultiValidator} from './js/validators/MultiValidator.js';
+import {RegexValidator} from './js/validators/RegexValidator.js';
+import {EmailValidator} from './js/validators/EmailValidator.js';
+import {IPv4Validator} from './js/validators/IPv4Validator.js';
+import {ConfirmationValidator} from './js/validators/ConfirmationValidator.js';
 
 export * from './js/validator';
 
@@ -24,3 +25,4 @@ addValidator('Multi', MultiValidator);
 addValidator('Regex', RegexValidator);
 addValidator('Email', EmailValidator);
 addValidator('IPv4', IPv4Validator);
+addValidator('Confirmation', ConfirmationValidator);
