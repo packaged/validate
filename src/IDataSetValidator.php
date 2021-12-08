@@ -4,7 +4,15 @@ namespace Packaged\Validate;
 
 interface IDataSetValidator
 {
-  public function setData(array $data): self;
+  /**
+   * @param array $data
+   *
+   * @return $this
+   */
+  public function setData(array $data);
 
+  /**
+   * @return array
+   */
   public function getData(): array;
 }
