@@ -2,6 +2,7 @@
 namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\Validation;
+use Packaged\Validate\ValidationException;
 use Packaged\Validate\Validators\ArrayValidator;
 use Packaged\Validate\Validators\IntegerValidator;
 use Packaged\Validate\Validators\StringValidator;
@@ -33,22 +34,18 @@ class ArrayValidatorTest extends TestCase
     $this->assertEquals($expectedValid, $validator->isValid($testArray));
   }
 
-  /**
-   * @expectedException \Packaged\Validate\ValidationException
-   * @expectedExceptionMessage must be an array
-   */
   public function testNotArray()
   {
+    $this->expectException(ValidationException::class);
+    $this->expectExceptionMessage('must be an array');
     $validator = new ArrayValidator(new StringValidator());
     $validator->assert('string');
   }
 
-  /**
-   * @expectedException \Packaged\Validate\ValidationException
-   * @expectedExceptionMessage must contain at least 2 items
-   */
   public function testSubValidator()
   {
+    $this->expectException(ValidationException::class);
+    $this->expectExceptionMessage('must contain at least 2 items');
     $validator = new ArrayValidator(new IntegerValidator(3, 5), 2, 2);
     $this->assertEquals(true, $validator->isValid([3, 5]));
 
