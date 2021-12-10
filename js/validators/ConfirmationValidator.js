@@ -16,7 +16,7 @@ export class ConfirmationValidator extends DataSetValidator
   validate(value)
   {
     const data = this.getData();
-    const compare = data[this._field] ? data[this._field] : null;
+    const compare = data.hasOwnProperty(this._field) ? data[this._field] : null;
     if(compare !== value)
     {
       return ValidationResponse.error(['value does not match']);
