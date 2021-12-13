@@ -20,6 +20,10 @@ export class RegexValidator extends Validator
     if(typeof regex === 'string')
     {
       const parts = /\/(.*)\/(.*)/.exec(regex);
+      if(!parts)
+      {
+        return ValidationResponse.error(['not a valid regular expression']);
+      }
       regex = new RegExp(parts[1], parts[2]);
     }
 

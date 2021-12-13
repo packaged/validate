@@ -13,6 +13,7 @@ import {NumberValidator} from './js/validators/NumberValidator';
 import {IntegerValidator} from './js/validators/IntegerValidator';
 import {DecimalValidator} from './js/validators/DecimalValidator';
 import {ConfirmationValidator} from './js/validators/ConfirmationValidator.js';
+import {RegexValidator} from './js/validators/RegexValidator.js';
 
 function testSuccess(response)
 {
@@ -240,6 +241,26 @@ test(
     testSuccess(v.validate('100.000'));
     testFailure(v.validate(100000), ['must be less than 150']);
     testFailure(v.validate('100000'), ['must be less than 150']);
+  }
+);
+
+test(
+  'RegexValidator',
+  () =>
+  {
+    let v = new RegexValidator('not valid regex');
+    testFailure(v.validate('test'), ['not a valid regular expression']);
+
+    v = new RegexValidator({});
+    testFailure(v.validate('test'), ['not a valid regular expression']);
+
+    v = new RegexValidator('/test/', 'not test');
+    testFailure(v.validate('abc'), ['not test']);
+
+    v = new RegexValidator('/test/');
+    testFailure(v.validate('abc'), ['does not match regular expression']);
+    testFailure(v.validate('1'), ['does not match regular expression']);
+    testSuccess(v.validate('test'));
   }
 );
 
