@@ -8,7 +8,7 @@ abstract class AbstractSerializableValidator extends AbstractValidator implement
     return substr(basename(str_replace('\\', '/', static::class)), 0, -9);
   }
 
-  final public function jsonSerialize()
+  final public function jsonSerialize(): mixed
   {
     return [
       't' => $this::serializeType(),
