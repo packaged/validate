@@ -11,6 +11,7 @@ import {RegexValidator} from './js/validators/RegexValidator.js';
 import {EmailValidator} from './js/validators/EmailValidator.js';
 import {IPv4Validator} from './js/validators/IPv4Validator.js';
 import {ConfirmationValidator} from './js/validators/ConfirmationValidator.js';
+import {FileSizeValidator} from './js/validators/FileSizeValidator';
 
 export * from './js/validator';
 
@@ -26,3 +27,4 @@ addValidator('Regex', RegexValidator);
 addValidator('Email', EmailValidator);
 addValidator('IPv4', IPv4Validator);
 addValidator('Confirmation', ConfirmationValidator);
+addValidator('FileSize', FileSizeValidator);
