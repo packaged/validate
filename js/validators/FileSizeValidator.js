@@ -19,7 +19,7 @@ export class FileSizeValidator extends Validator
 
   validate(value)
   {
-    if(value[0] && value[0].size > (this._maxSize * 1024 * 1024))
+    if(value.hasOwnProperty('size') && value.size > (this._maxSize * 1024 * 1024))
     {
       return ValidationResponse.error(['File upload cannot be more than ' + this._maxSize + 'mb in size']);
     }
