@@ -72,7 +72,8 @@ abstract class AbstractValidator implements IValidator, JsonSerializable
     return true;
   }
 
-  public function jsonSerialize(): mixed
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize(): array
   {
     return [];
   }
