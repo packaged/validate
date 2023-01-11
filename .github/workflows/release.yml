@@ -17,7 +17,7 @@ jobs:
         php: [ 7.3, 7.4, 8.0 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -45,7 +45,7 @@ jobs:
         id: release
         uses: justincy/github-action-npm-release@2.0.2
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         if: steps.release.outputs.released == 'true'
         with:
           registry-url: https://registry.npmjs.org/
@@ -55,7 +55,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         if: steps.release.outputs.released == 'true'
         with:
           registry-url: https://npm.pkg.github.com/
