@@ -29,16 +29,20 @@ class FileSizeValidator extends AbstractSerializableValidator
   public function serialize(): array
   {
     return [
-      'maxSize' => $this->_maxSize,
+      'maxSize' => $this->getMaxSize(),
     ];
   }
 
   protected function _doValidate($value): Generator
   {
-    // Validation
-    if(array_key_exists('size', $value) && $value['size'] < ($this->_maxSize * 1024 * 1024))
+    if(is_object($value) && method_exists($value, 'getRealPath'))
     {
-      yield $this->_makeError("File upload cannot be more than " . $this->_maxSize . "mb in size");
+      $realSize = file_exists($value->getRealPath()) ? filesize($value->getRealPath()) : 0;
+      // Validation
+      if($realSize > 0 && $realSize > ($this->_maxSize * 1024 * 1024))
+      {
+        yield $this->_makeError("File upload cannot be more than " . $this->_maxSize . "mb in size");
+      }
     }
   }
 
