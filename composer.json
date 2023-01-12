@@ -15,8 +15,7 @@
   ],
   "require": {
     "php": ">=7.3",
-    "ext-json": "*",
-    "symfony/http-foundation": "~3.0"
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~9"
