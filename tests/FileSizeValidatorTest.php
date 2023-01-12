@@ -3,7 +3,6 @@ namespace Packaged\Validate\Tests;
 
 use Packaged\Validate\Validators\FileSizeValidator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileSizeValidatorTest extends TestCase
 {
@@ -16,6 +15,5 @@ class FileSizeValidatorTest extends TestCase
 
     $this->assertTrue($validator->isValid($upload));
     $this->assertFalse($validator->isValid($largeUpload));
-
   }
 }
