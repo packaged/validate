@@ -7,8 +7,18 @@ use Packaged\Validate\SerializableValidator;
 
 class StringValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+  public const DICT_MIN = 'min';
+  public const DICT_MAX = 'max';
+
   protected $_minLength;
   protected $_maxLength;
+
+  protected $_dictionary = [
+    self::DICT_MIN     => 'must be at least %s characters',
+    self::DICT_MAX     => 'must be no more than %s characters',
+    self::DICT_INVALID => 'invalid string',
+  ];
 
   /**
    * @param int $minLength Min length in bytes, 0 to disable
@@ -44,11 +54,13 @@ class StringValidator extends AbstractSerializableValidator
     $len = strlen($value);
     if($len < $this->_minLength)
     {
-      yield $this->_makeError('must be at least ' . $this->_minLength . ' characters');
+      $err = str_replace('%s', $this->_minLength, $this->getDictionary()[self::DICT_MIN]);
+      yield $this->_makeError($err);
     }
     else if(($this->_maxLength > 0) && ($len > $this->_maxLength))
     {
-      yield $this->_makeError('must be no more than ' . $this->_maxLength . ' characters');
+      $err = str_replace('%s', $this->_maxLength, $this->getDictionary()[self::DICT_MAX]);
+      yield $this->_makeError($err);
     }
   }
 
@@ -67,5 +79,4 @@ class StringValidator extends AbstractSerializableValidator
   {
     return $this->_maxLength;
   }
-
 }

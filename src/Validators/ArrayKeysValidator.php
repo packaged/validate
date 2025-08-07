@@ -7,6 +7,16 @@ use Packaged\Validate\SerializableValidator;
 
 class ArrayKeysValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+  public const DICT_MISSING = 'missing';
+  public const DICT_UNKNOWN = 'unknown';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'must be an array',
+    self::DICT_MISSING => 'missing required entries: %s',
+    self::DICT_UNKNOWN => 'unknown entries: %s',
+  ];
+
   protected $_requiredEntries;
   protected $_allowUnknownEntries;
 
@@ -38,7 +48,7 @@ class ArrayKeysValidator extends AbstractSerializableValidator
   {
     if(!is_array($value))
     {
-      return $this->_makeError('must be an array');
+      return $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
 
     $valueKeys = array_keys($value);
@@ -48,7 +58,8 @@ class ArrayKeysValidator extends AbstractSerializableValidator
       $missingEntries = array_diff($this->_requiredEntries, $valueKeys);
       if(count($missingEntries) > 0)
       {
-        yield $this->_makeError('missing entries: ' . implode(', ', $missingEntries));
+        $err = sprintf($this->getDictionary()[self::DICT_MISSING], implode(', ', $missingEntries));
+        yield $this->_makeError($err);
       }
     }
 
@@ -57,7 +68,8 @@ class ArrayKeysValidator extends AbstractSerializableValidator
       $extraEntries = array_diff($valueKeys, $this->_requiredEntries);
       if(count($extraEntries) > 0)
       {
-        yield $this->_makeError('unknown entries: ' . implode(', ', $extraEntries));
+        $err = sprintf($this->getDictionary()[self::DICT_UNKNOWN], implode(', ', $extraEntries));
+        yield $this->_makeError($err);
       }
     }
   }

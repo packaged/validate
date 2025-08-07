@@ -7,29 +7,31 @@ use Packaged\Validate\SerializableValidator;
 
 class RegexValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
   protected $_pattern;
   protected $_message;
 
+  protected $_dictionary = [
+    self::DICT_INVALID => 'does not match regular expression',
+  ];
+
   /**
    * @param string $pattern
-   * @param string $message
    */
-  public function __construct($pattern, $message = 'does not match regular expression')
+  public function __construct($pattern)
   {
     $this->_pattern = $pattern;
-    $this->_message = $message;
   }
 
   public static function deserialize($configuration): SerializableValidator
   {
-    return new static($configuration->pattern, $configuration->message);
+    return new static($configuration->pattern);
   }
 
   public function serialize(): array
   {
     return [
       'pattern' => $this->_pattern,
-      'message' => $this->_message,
     ];
   }
 
@@ -37,7 +39,7 @@ class RegexValidator extends AbstractSerializableValidator
   {
     if(preg_match($this->_pattern, $value) !== 1)
     {
-      yield $this->_makeError($this->_message);
+      yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
   }
 

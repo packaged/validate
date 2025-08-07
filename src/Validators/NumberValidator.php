@@ -7,6 +7,16 @@ use Packaged\Validate\SerializableValidator;
 
 class NumberValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+  public const DICT_MIN = 'min';
+  public const DICT_MAX = 'max';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'must be a number',
+    self::DICT_MIN     => 'must be more than %s',
+    self::DICT_MAX     => 'must be less than %s',
+  ];
+
   protected $_minValue;
   protected $_maxValue;
 
@@ -39,15 +49,17 @@ class NumberValidator extends AbstractSerializableValidator
   {
     if(!is_numeric($value))
     {
-      yield $this->_makeError('must be a number');
+      yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
     else if(($this->_minValue !== null) && ($value < $this->_minValue))
     {
-      yield $this->_makeError('must be more than ' . $this->_minValue);
+      $err = str_replace('%s', $this->_minValue, $this->getDictionary()[self::DICT_MIN]);
+      yield $this->_makeError($err);
     }
     else if(($this->_maxValue !== null) && ($value > $this->_maxValue))
     {
-      yield $this->_makeError('must be less than ' . $this->_maxValue);
+      $err = str_replace('%s', $this->_maxValue, $this->getDictionary()[self::DICT_MAX]);
+      yield $this->_makeError($err);
     }
   }
 
@@ -66,5 +78,4 @@ class NumberValidator extends AbstractSerializableValidator
   {
     return $this->_maxValue;
   }
-
 }

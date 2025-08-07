@@ -7,6 +7,12 @@ use Packaged\Validate\SerializableValidator;
 
 class NotEqualValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'inv';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'value must not match',
+  ];
+
   protected $_expect;
 
   public function __construct($expect)
@@ -18,7 +24,7 @@ class NotEqualValidator extends AbstractSerializableValidator
   {
     if($value === $this->_expect)
     {
-      yield $this->_makeError('value must not match');
+      yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
   }
 

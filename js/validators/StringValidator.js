@@ -18,16 +18,29 @@ export class StringValidator extends Validator
   {
     if(typeof value !== 'string')
     {
+      if(this._dictionary && this._dictionary.invalid)
+      {
+        return ValidationResponse.error([this._dictionary.invalid]);
+      }
+
       return ValidationResponse.error(['not a valid value']);
     }
 
     if(this._minLength > 0 && value.length < this._minLength)
     {
+      if(this._dictionary && this._dictionary.min)
+      {
+        return ValidationResponse.error([this._dictionary.min.replace('%s', this._minLength.toString())]);
+      }
       return ValidationResponse.potentiallyValid(['must be at least ' + this._minLength + ' characters']);
     }
 
     if(this._maxLength > 0 && value.length > this._maxLength)
     {
+      if(this._dictionary && this._dictionary.max)
+      {
+        return ValidationResponse.error([this._dictionary.max.replace('%s', this._maxLength.toString())]);
+      }
       return ValidationResponse.error(['must be no more than ' + this._maxLength + ' characters']);
     }
 

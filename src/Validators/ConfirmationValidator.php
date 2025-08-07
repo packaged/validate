@@ -9,6 +9,12 @@ use Packaged\Validate\SerializableValidator;
 
 class ConfirmationValidator extends AbstractSerializableValidator implements IDataSetValidator
 {
+  public const DICT_INVALID = 'invalid';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'value does not match',
+  ];
+
   use DatasetValidatorTrait;
 
   protected $_field;
@@ -35,7 +41,7 @@ class ConfirmationValidator extends AbstractSerializableValidator implements IDa
     $compare = $this->_data[$this->_field] ?? null;
     if($compare !== $value)
     {
-      yield $this->_makeError('value does not match');
+      yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
   }
 }

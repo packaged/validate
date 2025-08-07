@@ -65,13 +65,22 @@ class Validation
     $classAlias = $o->t ?? null;
     /** @var object $classConfiguration */
     $classConfiguration = $o->c ?? null;
+    $dictionary = $o->d ?? null;
+
     if(isset(static::$_validators[$classAlias]))
     {
       /** @var SerializableValidator $class */
       $class = static::$_validators[$classAlias];
       if(is_subclass_of($class, SerializableValidator::class))
       {
-        return $class::deserialize($classConfiguration);
+        $class = $class::deserialize($classConfiguration);
+
+        if($class instanceof AbstractValidator)
+        {
+          $class->setDictionary(json_decode(json_encode($dictionary), true));
+        }
+
+        return $class;
       }
     }
     return null;

@@ -15,21 +15,18 @@ import {DecimalValidator} from './js/validators/DecimalValidator';
 import {ConfirmationValidator} from './js/validators/ConfirmationValidator.js';
 import {RegexValidator} from './js/validators/RegexValidator.js';
 
-function testSuccess(response)
-{
+function testSuccess(response) {
   expect(response).toHaveProperty('errors', []);
 }
 
-function testFailure(response, errors, potentiallyValid = false)
-{
+function testFailure(response, errors, potentiallyValid = false) {
   expect(response).toHaveProperty('errors', errors);
   expect(response).toHaveProperty('potentiallyValid', potentiallyValid);
 }
 
 test(
   'deserialize',
-  () =>
-  {
+  () => {
     let v = Validator.fromJsonObject({t: 'String', c: {'minLength': 2, 'maxLength': 5}});
     expect(v).toBeInstanceOf(StringValidator);
     expect(v._minLength).toStrictEqual(2);
@@ -38,9 +35,33 @@ test(
 );
 
 test(
+  'TranslatedStringValidator',
+  () => {
+    let v = new StringValidator(2, 5);
+    v.dictionary = {
+      invalid: 'kein gültiger Wert',
+      min: 'muss mindestens sein %s characters',
+      max: 'darf nicht mehr als sein %s characters'
+    };
+
+    testFailure(v.validate(), ['kein gültiger Wert']);
+    testFailure(v.validate(''), ['muss mindestens sein 2 characters']);
+    testFailure(v.validate('testtest'), ['darf nicht mehr als sein 5 characters']);
+  }
+);
+
+test(
+  'TranslatedRequiredValidator',
+  () => {
+    let v = new RequiredValidator();
+    v.dictionary = {invalid: 'kein gültiger Wert'};
+    testFailure(v.validate(), ['kein gültiger Wert']);
+  }
+);
+
+test(
   'StringValidator',
-  () =>
-  {
+  () => {
     let v = new StringValidator();
     testSuccess(v.validate('test'));
     testSuccess(v.validate(''));
@@ -70,8 +91,7 @@ test(
 
 test(
   'BoolValidator',
-  () =>
-  {
+  () => {
     const v = new BoolValidator();
     testFailure(v.validate('test'), ['Invalid boolean value']);
     testFailure(v.validate(''), ['Invalid boolean value']);
@@ -90,8 +110,7 @@ test(
 
 test(
   'EnumValidator',
-  () =>
-  {
+  () => {
     let v = new EnumValidator();
     testSuccess(v.validate(''));
     testFailure(v.validate('test'), ['not a valid value']);
@@ -117,8 +136,7 @@ test(
 
 test(
   'ConstEnumValidator',
-  () =>
-  {
+  () => {
     let v = new ConstEnumValidator();
     testSuccess(v.validate(''));
     testFailure(v.validate('test'), ['not a valid value']);
@@ -144,8 +162,7 @@ test(
 
 test(
   'EqualValidator',
-  () =>
-  {
+  () => {
     let v = new EqualValidator('test');
     testFailure(v.validate(''), ['value does not match']);
     testSuccess(v.validate('test'));
@@ -157,8 +174,7 @@ test(
 
 test(
   'NotEqualValidator',
-  () =>
-  {
+  () => {
     let v = new NotEqualValidator('test');
     testFailure(v.validate('test'), ['value must not match']);
     testSuccess(v.validate(''));
@@ -170,8 +186,7 @@ test(
 
 test(
   'RequiredValidator',
-  () =>
-  {
+  () => {
     let v = new RequiredValidator();
     testSuccess(v.validate(true));
     testSuccess(v.validate(false));
@@ -189,8 +204,7 @@ test(
 
 test(
   'EmailValidator',
-  () =>
-  {
+  () => {
     let v = new EmailValidator();
     testSuccess(v.validate('test@test.com'));
     testSuccess(v.validate('a@b.com'));
@@ -202,8 +216,7 @@ test(
 
 test(
   'IPv4Validator',
-  () =>
-  {
+  () => {
     let v = new IPv4Validator();
     testSuccess(v.validate('0.0.0.0'));
     testSuccess(v.validate('255.255.255.255'));
@@ -222,8 +235,7 @@ test(
 
 test(
   'NumberValidator',
-  () =>
-  {
+  () => {
     let v = new NumberValidator();
     testFailure(v.validate('test'), ['must be a number']);
     testSuccess(v.validate(1));
@@ -246,28 +258,26 @@ test(
 
 test(
   'RegexValidator',
-  () =>
-  {
+  () => {
     let v = new RegexValidator('not valid regex');
     testFailure(v.validate('test'), ['not a valid regular expression']);
 
     v = new RegexValidator({});
     testFailure(v.validate('test'), ['not a valid regular expression']);
 
-    v = new RegexValidator('/test/', 'not test');
-    testFailure(v.validate('abc'), ['not test']);
+    v = new RegexValidator('/test/');
+    testFailure(v.validate('abc'), ['not a valid regular expression']);
 
     v = new RegexValidator('/test/');
-    testFailure(v.validate('abc'), ['does not match regular expression']);
-    testFailure(v.validate('1'), ['does not match regular expression']);
+    testFailure(v.validate('abc'), ['not a valid regular expression']);
+    testFailure(v.validate('1'), ['not a valid regular expression']);
     testSuccess(v.validate('test'));
   }
 );
 
 test(
   'IntegerValidator',
-  () =>
-  {
+  () => {
     let v = new IntegerValidator();
     testFailure(v.validate('test'), ['must be a number']);
     testSuccess(v.validate(1));
@@ -296,8 +306,7 @@ test(
 
 test(
   'DecimalValidator',
-  () =>
-  {
+  () => {
     let v = new DecimalValidator();
     testFailure(v.validate('test'), ['must be a number']);
     testSuccess(v.validate(1));
@@ -328,8 +337,7 @@ test(
 
 test(
   'ConfirmationValidator',
-  () =>
-  {
+  () => {
     let v = new ConfirmationValidator('field2');
     v.setData({'field1': 10});
     testFailure(v.validate(v.getData()['field1']), ['value does not match']);

@@ -8,6 +8,12 @@ use Packaged\Validate\ValidationException;
 
 class FunctionValidator extends AbstractValidator
 {
+  public const DICT_INVALID = 'invalid';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'Failed to validate',
+  ];
+
   /**
    * @var callable
    */
@@ -43,7 +49,7 @@ class FunctionValidator extends AbstractValidator
     }
     else if(is_bool($result) && !$result)
     {
-      yield new ValidationException('Failed to validate');
+      yield new ValidationException($this->getDictionary()[self::DICT_INVALID]);
     }
   }
 }
