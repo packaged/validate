@@ -37,7 +37,7 @@ abstract class AbstractValidator implements IValidator, JsonSerializable
    */
   public function setDictionary(array $dictionary): void
   {
-    $this->_dictionary = $dictionary;
+    $this->_dictionary = array_merge($this->_dictionary, $dictionary);
   }
 
   public function validate($value): array
