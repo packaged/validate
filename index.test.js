@@ -51,6 +51,22 @@ test(
 );
 
 test(
+  'MissinKeyTranslatedStringValidator',
+  () => {
+    let v = new StringValidator(2, 5);
+    v.dictionary = {
+      invalid: 'kein gültiger Wert',
+      min: 'muss mindestens sein %s characters'
+      // max is missing
+    };
+
+    testFailure(v.validate(), ['kein gültiger Wert']);
+    testFailure(v.validate(''), ['muss mindestens sein 2 characters']);
+    testFailure(v.validate('testesttest'), ['must be no more than 5 characters']); // default error message
+  }
+)
+
+test(
   'TranslatedRequiredValidator',
   () => {
     let v = new RequiredValidator();
