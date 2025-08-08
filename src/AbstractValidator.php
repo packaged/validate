@@ -20,7 +20,7 @@ abstract class AbstractValidator implements IValidator, JsonSerializable
    */
   abstract protected function _doValidate($value): Generator;
 
-  public static function withDictionary(array $dictionary, ...$args): static
+  public static function withDictionary(array $dictionary, ...$args)
   {
     $validator = new static(...$args);
     $validator->setDictionary($dictionary);
