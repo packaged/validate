@@ -1,41 +1,45 @@
 import {ValidationResponse, Validator} from '../validator';
 
-export class RegexValidator extends Validator
-{
-  constructor(pattern, message = 'does not match regular expression')
-  {
+export class RegexValidator extends Validator {
+  constructor(pattern) {
     super();
     this._pattern = pattern;
-    this._message = message;
   }
 
-  static deserialize(config)
-  {
-    return new this(config.pattern, config.message);
+  static deserialize(config) {
+    return new this(config.pattern);
   }
 
-  validate(value)
-  {
+  validate(value) {
     let regex = this._pattern;
-    if(typeof regex === 'string')
-    {
+    if(typeof regex === 'string') {
       const parts = /\/(.*)\/(.*)/.exec(regex);
-      if(!parts)
-      {
-        return ValidationResponse.error(['not a valid regular expression']);
+      if(!parts) {
+        if(this._dictionary && this._dictionary.invalid) {
+          return ValidationResponse.error([this._dictionary.invalid]);
+        }
+        return ValidationResponse.error([this.getDefaultErrorMessage()]);
       }
       regex = new RegExp(parts[1], parts[2]);
     }
 
-    if(!(regex instanceof RegExp))
-    {
-      return ValidationResponse.error(['not a valid regular expression']);
+    if(!(regex instanceof RegExp)) {
+      if(this._dictionary && this._dictionary.invalid) {
+        return ValidationResponse.error([this._dictionary.invalid]);
+      }
+      return ValidationResponse.error([this.getDefaultErrorMessage()]);
     }
 
-    if(!regex.test(value))
-    {
-      return ValidationResponse.error([this._message]);
+    if(!regex.test(value)) {
+      if(this._dictionary && this._dictionary.invalid) {
+        return ValidationResponse.error([this._dictionary.invalid]);
+      }
+      return ValidationResponse.error([this.getDefaultErrorMessage()]);
     }
     return ValidationResponse.success();
+  }
+
+  getDefaultErrorMessage() {
+    return 'not a valid regular expression';
   }
 }

@@ -5,12 +5,12 @@ use Packaged\Validate\SerializableValidator;
 
 class EmailValidator extends RegexValidator
 {
-  public function __construct($message = 'invalid email address')
+  public function __construct()
   {
     parent::__construct(
       '/^[_a-zA-Z0-9+\-]+(\.[_a-zA-Z0-9+\-]+)*@[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(\.[a-zA-Z]{2,})$/',
-      $message
     );
+    $this->_dictionary[self::DICT_INVALID] = 'invalid email address';
   }
 
   public static function deserialize($configuration): SerializableValidator

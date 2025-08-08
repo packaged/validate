@@ -7,6 +7,12 @@ use Packaged\Validate\SerializableValidator;
 
 class BoolValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'Invalid boolean value',
+  ];
+
   public static function deserialize($configuration): SerializableValidator
   {
     return new static();
@@ -33,7 +39,7 @@ class BoolValidator extends AbstractSerializableValidator
     }
     if(!$result)
     {
-      yield $this->_makeError('Invalid boolean value');
+      yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
   }
 }

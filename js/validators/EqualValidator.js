@@ -17,6 +17,10 @@ export class EqualValidator extends Validator
   {
     if(value !== this._expect)
     {
+      if(this._dictionary && this._dictionary.invalid)
+      {
+        return ValidationResponse.error([this._dictionary.invalid]);
+      }
       return ValidationResponse.error(['value does not match']);
     }
     return ValidationResponse.success();

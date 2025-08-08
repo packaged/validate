@@ -9,6 +9,16 @@ use Packaged\Validate\Validation;
 
 class ArrayValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+  public const DICT_MIN = 'min';
+  public const DICT_MAX = 'max';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'must be an array',
+    self::DICT_MIN     => 'must contain at least %s items',
+    self::DICT_MAX     => 'must not contain more than %s items',
+  ];
+
   protected $_validator;
   protected $_minCount;
   protected $_maxCount;
@@ -42,18 +52,20 @@ class ArrayValidator extends AbstractSerializableValidator
   {
     if(!is_array($value))
     {
-      return $this->_makeError('must be an array');
+      return $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
 
     $numItems = count($value);
     if($numItems < $this->_minCount)
     {
-      return $this->_makeError('must contain at least ' . $this->_minCount . ' items');
+      $err = str_replace('%s', $this->_minCount, $this->getDictionary()[self::DICT_MIN]);
+      return $this->_makeError($err);
     }
 
     if(($this->_maxCount > 0) && ($numItems > $this->_maxCount))
     {
-      return $this->_makeError('must not contain more than ' . $this->_maxCount . ' items');
+      $err = str_replace('%s', $this->_maxCount, $this->getDictionary()[self::DICT_MAX]);
+      return $this->_makeError($err);
     }
 
     foreach($value as $idx => $entry)
@@ -80,5 +92,4 @@ class ArrayValidator extends AbstractSerializableValidator
   {
     return $this->_maxCount;
   }
-
 }

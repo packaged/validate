@@ -14,6 +14,7 @@ abstract class AbstractSerializableValidator extends AbstractValidator implement
     return [
       't' => $this::serializeType(),
       'c' => $this->serialize(),
+      'd' => $this->getDictionary(),
     ];
   }
 }

@@ -7,6 +7,12 @@ use Packaged\Validate\SerializableValidator;
 
 class EnumValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'not a valid value',
+  ];
+
   protected $_allowedValues;
   protected $_caseSensitive;
   protected $_negate;
@@ -52,7 +58,7 @@ class EnumValidator extends AbstractSerializableValidator
     {
       if($this->_negate xor ($value !== null && $value !== ''))
       {
-        return $this->_makeError('not a valid value');
+        return $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
       }
       return null;
     }
@@ -61,7 +67,7 @@ class EnumValidator extends AbstractSerializableValidator
     {
       if($this->_negate xor !in_array($value, $this->_getAllowedValues()))
       {
-        return $this->_makeError('not a valid value');
+        return $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
       }
       return null;
     }
@@ -77,7 +83,7 @@ class EnumValidator extends AbstractSerializableValidator
     }
     if($this->_negate xor !$result)
     {
-      yield $this->_makeError('not a valid value');
+      yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
     }
   }
 
@@ -95,5 +101,4 @@ class EnumValidator extends AbstractSerializableValidator
   {
     return $this->_caseSensitive;
   }
-
 }

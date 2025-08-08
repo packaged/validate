@@ -6,6 +6,8 @@ use Packaged\Validate\SerializableValidator;
 
 class DecimalValidator extends NumberValidator
 {
+  public const DICT_DECIMAL = 'decimal';
+
   protected $_decimalPlaces;
 
   /**
@@ -21,6 +23,8 @@ class DecimalValidator extends NumberValidator
   {
     parent::__construct($minValue, $maxValue);
     $this->_decimalPlaces = $decimalPlaces;
+    $this->_dictionary[self::DICT_INVALID] = 'invalid decimal value';
+    $this->_dictionary[self::DICT_DECIMAL] = 'must be a decimal number with no more than %s decimal places';
   }
 
   public static function deserialize($configuration): SerializableValidator
@@ -51,11 +55,11 @@ class DecimalValidator extends NumberValidator
       $parts = explode('.', $value);
       if(count($parts) > 2)
       {
-        yield $this->_makeError('invalid decimal value');
+        yield $this->_makeError($this->getDictionary()[self::DICT_INVALID]);
       }
       else if(count($parts) == 2 && ($this->_decimalPlaces !== null && strlen($parts[1]) > $this->_decimalPlaces))
       {
-        yield $this->_makeError('must be a number to no more than ' . $this->_decimalPlaces . ' decimal places');
+        yield $this->_makeError($this->getDictionary()[self::DICT_DECIMAL]);
       }
     }
   }
@@ -67,5 +71,4 @@ class DecimalValidator extends NumberValidator
   {
     return $this->_decimalPlaces;
   }
-
 }

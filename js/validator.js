@@ -1,5 +1,6 @@
 /**
- * @typedef {function(new: Validator), deserialize} ValidatorType
+ * @typedef {function(new: Validator)} ValidatorType
+ * @property deserialize
  */
 
 /**
@@ -8,24 +9,22 @@
  */
 const _validatorMap = new Map();
 
-export class Validator
-{
+export class Validator {
   /**
    * @param {Object} obj
    * @return {Validator}
    */
-  static fromJsonObject(obj)
-  {
-    if(!_validatorMap.has(obj.t))
-    {
+  static fromJsonObject(obj) {
+    if(!_validatorMap.has(obj.t)) {
       throw 'unrecognised type ' + obj.t;
     }
-    const c = _validatorMap.get(obj.t);
-    return c.deserialize(obj.c);
+    const validator = _validatorMap.get(obj.t);
+    const initializedValidator = validator.deserialize(obj.c);
+    initializedValidator.dictionary = obj.d;
+    return initializedValidator;
   }
 
-  static deserialize(config)
-  {
+  static deserialize(config) {
     return new this();
   }
 
@@ -34,70 +33,63 @@ export class Validator
    * @return {ValidationResponse}
    * @throws
    */
-  validate(value)
-  {
+  validate(value) {
     throw 'validate not implemented on ' + this.constructor.name;
+  }
+
+  /**
+   * @param {Object} dictionary
+   */
+  set dictionary(dictionary) {
+    this._dictionary = dictionary || {};
   }
 }
 
-export class DataSetValidator extends Validator
-{
+export class DataSetValidator extends Validator {
   _data = {};
 
-  setData(data)
-  {
+  setData(data) {
     this._data = data;
   }
 
-  getData()
-  {
+  getData() {
     return this._data;
   }
 }
 
-export class ValidationResponse
-{
-  constructor(errors, potentiallyValid)
-  {
+export class ValidationResponse {
+  constructor(errors, potentiallyValid) {
     this._errors = errors || [];
     this._potentiallyValid = potentiallyValid || false;
   }
 
-  get errors()
-  {
+  get errors() {
     return this._errors;
   }
 
-  get potentiallyValid()
-  {
+  get potentiallyValid() {
     return this._potentiallyValid;
   }
 
-  static success()
-  {
+  static success() {
     return new ValidationResponse([], true);
   }
 
-  static potentiallyValid(errors = [])
-  {
+  static potentiallyValid(errors = []) {
     return new ValidationResponse(errors, true);
   }
 
-  static error(errors = [])
-  {
+  static error(errors = []) {
     return new ValidationResponse(errors, false);
   }
 
   /**
    * @param {...ValidationResponse} responses
    */
-  combine(...responses)
-  {
+  combine(...responses) {
     responses.forEach(
-      r =>
-      {
-        if(r instanceof ValidationResponse)
-        {
+      r => {
+        if(r instanceof ValidationResponse) {
           this._errors.push(...r._errors);
           this._potentiallyValid = this._potentiallyValid && r._potentiallyValid;
         }
@@ -110,7 +102,6 @@ export class ValidationResponse
  * @param {string} name
  * @param {ValidatorType} validator
  */
-export function addValidator(name, validator)
-{
+export function addValidator(name, validator) {
   _validatorMap.set(name, validator);
 }

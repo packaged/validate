@@ -7,6 +7,12 @@ use Packaged\Validate\SerializableValidator;
 
 class FileSizeValidator extends AbstractSerializableValidator
 {
+  public const DICT_INVALID = 'invalid';
+
+  protected $_dictionary = [
+    self::DICT_INVALID => 'File upload cannot be more than %smb in size',
+  ];
+
   protected $_maxSize;
 
   public function __construct($maxSize = null)
@@ -38,7 +44,8 @@ class FileSizeValidator extends AbstractSerializableValidator
     // Validation
     if(is_array($value) && array_key_exists('size', $value) && $value['size'] > ($this->_maxSize * 1024 * 1024))
     {
-      yield $this->_makeError("File upload cannot be more than " . $this->_maxSize . "mb in size");
+      $err = str_replace('%s', $this->_maxSize, $this->getDictionary()[self::DICT_INVALID]);
+      yield $this->_makeError($err);
     }
   }
 
@@ -46,5 +53,4 @@ class FileSizeValidator extends AbstractSerializableValidator
   {
     return $this->_maxSize;
   }
-
 }

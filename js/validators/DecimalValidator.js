@@ -1,13 +1,10 @@
 import {ValidationResponse} from '../validator';
 import {NumberValidator} from './NumberValidator';
 
-export class DecimalValidator extends NumberValidator
-{
-  constructor(decimalPlaces = null, minValue = null, maxValue = null)
-  {
+export class DecimalValidator extends NumberValidator {
+  constructor(decimalPlaces = null, minValue = null, maxValue = null) {
     super();
-    if((maxValue !== null) && (minValue !== null) && (maxValue < minValue))
-    {
+    if((maxValue !== null) && (minValue !== null) && (maxValue < minValue)) {
       throw 'maxValue must be greater than or equal to minValue';
     }
     this._decimalPlaces = decimalPlaces;
@@ -15,22 +12,24 @@ export class DecimalValidator extends NumberValidator
     this._maxValue = maxValue;
   }
 
-  static deserialize(config)
-  {
+  static deserialize(config) {
     return new this(config.decimalPlaces, config.minValue, config.maxValue);
   }
 
-  validate(value)
-  {
+  validate(value) {
     const response = super.validate(value);
 
     const split = value.toString().split('.');
-    if(split.length > 2)
-    {
+    if(split.length > 2) {
+      if(this._dictionary && this._dictionary.invalid) {
+        response.combine(ValidationResponse.error([this._dictionary.invalid]));
+      }
       response.combine(ValidationResponse.error(['invalid decimal value']));
     }
-    else if(split.length === 2 && (this._decimalPlaces !== null && split[1].length > this._decimalPlaces))
-    {
+    else if(split.length === 2 && (this._decimalPlaces !== null && split[1].length > this._decimalPlaces)) {
+      if(this._dictionary && this._dictionary.invalid) {
+        response.combine(ValidationResponse.error([this._dictionary.invalid.replace('%s', this._decimalPlaces.toString())]));
+      }
       response.combine(ValidationResponse.error([`must be a number to no more than ${this._decimalPlaces} decimal places`]));
     }
     return response;
