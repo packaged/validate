@@ -13,10 +13,10 @@ class RegexValidatorTest extends TestCase
     $v2 = RegexValidator::withDictionary([RegexValidator::DICT_INVALID => 'test failure message'], '/^[0-9]{6}$/');
     $v1err = $v1->validate('123');
     $this->assertNotEmpty($v1err);
-    $this->assertEquals('does not match regular expression', $v1err[0]->getMessage());
+    $this->assertEquals('Does not match regular expression', $v1err[0]->getMessage());
     $v2err = $v2->validate('123');
     $this->assertNotEmpty($v2err);
-    $this->assertEquals('test failure message', $v2err[0]->getMessage());
+    $this->assertEquals('Test failure message', $v2err[0]->getMessage());
   }
 
   public function testSerialize()

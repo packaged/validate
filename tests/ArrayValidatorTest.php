@@ -37,7 +37,7 @@ class ArrayValidatorTest extends TestCase
   public function testNotArray()
   {
     $this->expectException(ValidationException::class);
-    $this->expectExceptionMessage('must be an array');
+    $this->expectExceptionMessage('Must be an array');
     $validator = new ArrayValidator(new StringValidator());
     $validator->assert('string');
   }
@@ -45,7 +45,7 @@ class ArrayValidatorTest extends TestCase
   public function testSubValidator()
   {
     $this->expectException(ValidationException::class);
-    $this->expectExceptionMessage('must contain at least 2 items');
+    $this->expectExceptionMessage('Must contain at least 2 items');
     $validator = new ArrayValidator(new IntegerValidator(3, 5), 2, 2);
     $this->assertEquals(true, $validator->isValid([3, 5]));
 

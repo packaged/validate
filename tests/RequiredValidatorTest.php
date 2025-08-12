@@ -17,7 +17,7 @@ class RequiredValidatorTest extends TestCase
     $this->assertTrue($validator->isValid(0));
     $this->assertTrue($validator->isValid(false));
     $this->assertTrue($validator->isValid(true));
-    $this->assertEquals($validator->validate('')[0]->getMessage(), 'required');
+    $this->assertEquals($validator->validate('')[0]->getMessage(), 'Required');
 
     $validator = RequiredValidator::withDictionary([
       RequiredValidator::DICT_INVALID => 'This field is required',
