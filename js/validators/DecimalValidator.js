@@ -24,13 +24,13 @@ export class DecimalValidator extends NumberValidator {
       if(this._dictionary && this._dictionary.invalid) {
         response.combine(ValidationResponse.error([this._dictionary.invalid]));
       }
-      response.combine(ValidationResponse.error(['invalid decimal value']));
+      response.combine(ValidationResponse.error(['Invalid decimal value']));
     }
     else if(split.length === 2 && (this._decimalPlaces !== null && split[1].length > this._decimalPlaces)) {
       if(this._dictionary && this._dictionary.invalid) {
         response.combine(ValidationResponse.error([this._dictionary.invalid.replace('%s', this._decimalPlaces.toString())]));
       }
-      response.combine(ValidationResponse.error([`must be a number to no more than ${this._decimalPlaces} decimal places`]));
+      response.combine(ValidationResponse.error([`Must be a number to no more than ${this._decimalPlaces} decimal places`]));
     }
     return response;
   }

@@ -12,7 +12,7 @@ class ConfirmationValidator extends AbstractSerializableValidator implements IDa
   public const DICT_INVALID = 'invalid';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'value does not match',
+    self::DICT_INVALID => 'Values do not match',
   ];
 
   use DatasetValidatorTrait;

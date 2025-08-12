@@ -19,19 +19,19 @@ export class NumberValidator extends Validator {
       if(this._dictionary && this._dictionary.invalid) {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      return ValidationResponse.error(['must be a number']);
+      return ValidationResponse.error(['Must be a number']);
     }
     else if((this._minValue !== null) && (value < this._minValue)) {
       if(this._dictionary && this._dictionary.min) {
         return ValidationResponse.error([this._dictionary.min.replace('%s', this._minValue.toString())]);
       }
-      return ValidationResponse.potentiallyValid([`must be more than ${this._minValue}`]);
+      return ValidationResponse.potentiallyValid([`Must be more than ${this._minValue}`]);
     }
     else if((this._maxValue !== null) && (value > this._maxValue)) {
       if(this._dictionary && this._dictionary.max) {
         return ValidationResponse.error([this._dictionary.max.replace('%s', this._maxValue.toString())]);
       }
-      return ValidationResponse.error([`must be less than ${this._maxValue}`]);
+      return ValidationResponse.error([`Must be less than ${this._maxValue}`]);
     }
 
     return ValidationResponse.success();

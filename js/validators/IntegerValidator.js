@@ -8,7 +8,7 @@ export class IntegerValidator extends NumberValidator {
       if(this._dictionary && this._dictionary.invalid) {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      response.combine(ValidationResponse.error(['must be an integer']));
+      response.combine(ValidationResponse.error(['Must be an integer']));
     }
     return response;
   }

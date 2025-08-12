@@ -40,6 +40,6 @@ export class RegexValidator extends Validator {
   }
 
   getDefaultErrorMessage() {
-    return 'not a valid regular expression';
+    return 'Not a valid regular expression';
   }
 }

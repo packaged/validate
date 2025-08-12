@@ -19,14 +19,14 @@ export class EnumValidator extends Validator {
         if(this._dictionary && this._dictionary.invalid) {
           return ValidationResponse.error([this._dictionary.invalid]);
         }
-        return ValidationResponse.error(['not a valid value']);
+        return ValidationResponse.error(['Not a valid value']);
       }
     }
     else if(this._negate ^ (value !== null && value !== '')) {
       if(this._dictionary && this._dictionary.invalid) {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      return ValidationResponse.error(['not a valid value']);
+      return ValidationResponse.error(['Not a valid value']);
     }
     return ValidationResponse.success();
   }

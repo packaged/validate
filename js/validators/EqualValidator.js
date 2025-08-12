@@ -21,7 +21,7 @@ export class EqualValidator extends Validator
       {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      return ValidationResponse.error(['value does not match']);
+      return ValidationResponse.error(['Value does not match']);
     }
     return ValidationResponse.success();
   }

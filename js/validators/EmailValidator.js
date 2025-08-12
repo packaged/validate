@@ -8,6 +8,6 @@ export class EmailValidator extends RegexValidator {
   }
 
   getDefaultErrorMessage() {
-    return 'invalid email address';
+    return 'Invalid email address';
   }
 }

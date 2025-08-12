@@ -1,7 +1,6 @@
 import {ValidationResponse, Validator} from '../validator';
 
-export class StringValidator extends Validator
-{
+export class StringValidator extends Validator {
   constructor(minLength = 0, maxLength = 0)
   {
     super();
@@ -23,7 +22,7 @@ export class StringValidator extends Validator
         return ValidationResponse.error([this._dictionary.invalid]);
       }
 
-      return ValidationResponse.error(['not a valid value']);
+      return ValidationResponse.error(['Not a valid value']);
     }
 
     if(this._minLength > 0 && value.length < this._minLength)
@@ -32,7 +31,7 @@ export class StringValidator extends Validator
       {
         return ValidationResponse.error([this._dictionary.min.replace('%s', this._minLength.toString())]);
       }
-      return ValidationResponse.potentiallyValid(['must be at least ' + this._minLength + ' characters']);
+      return ValidationResponse.potentiallyValid(['Must be at least ' + this._minLength + ' characters']);
     }
 
     if(this._maxLength > 0 && value.length > this._maxLength)
@@ -41,7 +40,7 @@ export class StringValidator extends Validator
       {
         return ValidationResponse.error([this._dictionary.max.replace('%s', this._maxLength.toString())]);
       }
-      return ValidationResponse.error(['must be no more than ' + this._maxLength + ' characters']);
+      return ValidationResponse.error(['Must be no more than ' + this._maxLength + ' characters']);
     }
 
     return ValidationResponse.success();

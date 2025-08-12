@@ -8,6 +8,6 @@ export class IPv4Validator extends RegexValidator {
   }
 
   getDefaultErrorMessage() {
-    return 'invalid IPv4 address';
+    return 'Invalid IPv4 address';
   }
 }

@@ -18,12 +18,12 @@ export class ConfirmationValidator extends DataSetValidator {
         if(this._dictionary && this._dictionary.invalid) {
           return ValidationResponse.potentiallyValid([this._dictionary.invalid]);
         }
-        return ValidationResponse.potentiallyValid(['value does not match']);
+        return ValidationResponse.potentiallyValid(['Values do not match']);
       }
       if(this._dictionary && this._dictionary.invalid) {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      return ValidationResponse.error(['value does not match']);
+      return ValidationResponse.error(['Values do not match']);
     }
     return ValidationResponse.success();
   }

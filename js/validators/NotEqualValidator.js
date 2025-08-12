@@ -15,7 +15,7 @@ export class NotEqualValidator extends Validator {
       if(this._dictionary && this._dictionary.invalid) {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      return ValidationResponse.error(['value must not match']);
+      return ValidationResponse.error(['Value must not match']);
     }
     return ValidationResponse.success();
   }

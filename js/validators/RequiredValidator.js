@@ -6,7 +6,7 @@ export class RequiredValidator extends Validator {
       if(this._dictionary && this._dictionary.invalid) {
         return ValidationResponse.error([this._dictionary.invalid]);
       }
-      return ValidationResponse.error(['required']);
+      return ValidationResponse.error(['Required']);
     }
     return ValidationResponse.success();
   }
