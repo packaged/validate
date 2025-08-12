@@ -10,7 +10,7 @@ abstract class AbstractValidator implements IValidator, JsonSerializable
 
   protected function _makeError(string $message): ValidationException
   {
-    return new ValidationException($message);
+    return new ValidationException(ucfirst($message));
   }
 
   /**
