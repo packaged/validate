@@ -12,7 +12,7 @@ class RegexValidator extends AbstractSerializableValidator
   protected $_message;
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'does not match regular expression',
+    self::DICT_INVALID => 'Does not match regular expression',
   ];
 
   /**

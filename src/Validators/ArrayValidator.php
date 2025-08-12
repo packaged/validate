@@ -14,9 +14,9 @@ class ArrayValidator extends AbstractSerializableValidator
   public const DICT_MAX = 'max';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'must be an array',
-    self::DICT_MIN     => 'must contain at least %s items',
-    self::DICT_MAX     => 'must not contain more than %s items',
+    self::DICT_INVALID => 'Must be an array',
+    self::DICT_MIN     => 'Must contain at least %s items',
+    self::DICT_MAX     => 'Must not contain more than %s items',
   ];
 
   protected $_validator;

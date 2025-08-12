@@ -12,9 +12,9 @@ class ArrayKeysValidator extends AbstractSerializableValidator
   public const DICT_UNKNOWN = 'unknown';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'must be an array',
-    self::DICT_MISSING => 'missing required entries: %s',
-    self::DICT_UNKNOWN => 'unknown entries: %s',
+    self::DICT_INVALID => 'Must be an array',
+    self::DICT_MISSING => 'Missing required entries: %s',
+    self::DICT_UNKNOWN => 'Unknown entries: %s',
   ];
 
   protected $_requiredEntries;

@@ -23,8 +23,8 @@ class DecimalValidator extends NumberValidator
   {
     parent::__construct($minValue, $maxValue);
     $this->_decimalPlaces = $decimalPlaces;
-    $this->_dictionary[self::DICT_INVALID] = 'invalid decimal value';
-    $this->_dictionary[self::DICT_DECIMAL] = 'must be a decimal number with no more than %s decimal places';
+    $this->_dictionary[self::DICT_INVALID] = 'Invalid decimal value';
+    $this->_dictionary[self::DICT_DECIMAL] = 'Must be a decimal number with no more than %s decimal places';
   }
 
   public static function deserialize($configuration): SerializableValidator

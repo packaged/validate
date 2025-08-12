@@ -10,7 +10,7 @@ class EnumValidator extends AbstractSerializableValidator
   public const DICT_INVALID = 'invalid';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'not a valid value',
+    self::DICT_INVALID => 'Not a valid value',
   ];
 
   protected $_allowedValues;

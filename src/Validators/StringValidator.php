@@ -15,9 +15,9 @@ class StringValidator extends AbstractSerializableValidator
   protected $_maxLength;
 
   protected $_dictionary = [
-    self::DICT_MIN     => 'must be at least %s characters',
-    self::DICT_MAX     => 'must be no more than %s characters',
-    self::DICT_INVALID => 'invalid string',
+    self::DICT_MIN     => 'Must be at least %s characters',
+    self::DICT_MAX     => 'Must be no more than %s characters',
+    self::DICT_INVALID => 'Invalid string',
   ];
 
   /**

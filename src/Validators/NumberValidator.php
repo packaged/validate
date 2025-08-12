@@ -12,9 +12,9 @@ class NumberValidator extends AbstractSerializableValidator
   public const DICT_MAX = 'max';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'must be a number',
-    self::DICT_MIN     => 'must be more than %s',
-    self::DICT_MAX     => 'must be less than %s',
+    self::DICT_INVALID => 'Must be a number',
+    self::DICT_MIN     => 'Must be more than %s',
+    self::DICT_MAX     => 'Must be less than %s',
   ];
 
   protected $_minValue;

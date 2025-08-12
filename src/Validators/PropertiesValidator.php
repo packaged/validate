@@ -8,7 +8,7 @@ class PropertiesValidator extends ArrayKeysValidator
   public function __construct(array $requiredEntries, bool $allowUnknownEntries = false)
   {
     parent::__construct($requiredEntries, $allowUnknownEntries);
-    $this->_dictionary[self::DICT_INVALID] = 'must be an object';
+    $this->_dictionary[self::DICT_INVALID] = 'Must be an object';
   }
 
   protected function _doValidate($value): Generator

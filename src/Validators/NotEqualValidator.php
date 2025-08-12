@@ -10,7 +10,7 @@ class NotEqualValidator extends AbstractSerializableValidator
   public const DICT_INVALID = 'inv';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'value must not match',
+    self::DICT_INVALID => 'Value must not match',
   ];
 
   protected $_expect;

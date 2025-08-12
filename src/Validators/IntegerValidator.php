@@ -8,7 +8,7 @@ class IntegerValidator extends NumberValidator
   public function __construct($minValue = null, $maxValue = null)
   {
     parent::__construct($minValue, $maxValue);
-    $this->_dictionary[self::DICT_INVALID] = 'must be an integer';
+    $this->_dictionary[self::DICT_INVALID] = 'Must be an integer';
   }
 
   protected function _doValidate($value): Generator

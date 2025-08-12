@@ -10,7 +10,7 @@ class RequiredValidator extends AbstractSerializableValidator
   public const DICT_INVALID = 'invalid';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'required',
+    self::DICT_INVALID => 'Required',
   ];
 
   public static function deserialize($configuration): SerializableValidator

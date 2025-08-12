@@ -10,7 +10,7 @@ class EqualValidator extends AbstractSerializableValidator
   public const DICT_INVALID = 'invalid';
 
   protected $_dictionary = [
-    self::DICT_INVALID => 'value must match',
+    self::DICT_INVALID => 'Value must match',
   ];
 
   protected $_expect;

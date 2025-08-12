@@ -10,7 +10,7 @@ class EmailValidator extends RegexValidator
     parent::__construct(
       '/^[_a-zA-Z0-9+\-]+(\.[_a-zA-Z0-9+\-]+)*@[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(\.[a-zA-Z]{2,})$/',
     );
-    $this->_dictionary[self::DICT_INVALID] = 'invalid email address';
+    $this->_dictionary[self::DICT_INVALID] = 'Invalid email address';
   }
 
   public static function deserialize($configuration): SerializableValidator
