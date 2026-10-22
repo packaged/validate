@@ -75,7 +75,7 @@ class EnumValidator extends AbstractSerializableValidator
     $result = false;
     foreach($this->_getAllowedValues() as $allowedValue)
     {
-      if(strcasecmp($allowedValue, $value) == 0)
+      if(strcasecmp((string)$allowedValue, (string)$value) == 0)
       {
         $result = true;
         break;
